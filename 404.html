@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>美业智能 Agent 系统 · 交互演示 Demo</title>
+<meta name="description" content="美业智能Agent系统产品原型演示：招聘、转让引流、运营、客情、短视频五大AI Agent，含账号体系与数据看板">
+<style>
+/* ===== 美业智能 Agent 系统 Demo · 样式表 ===== */
+:root{
+  --brand:#D4708B;
+  --brand-d:#B85A75;
+  --brand-soft:#FCEFF2;
+  --gold:#C29A4F;
+  --gold-soft:#FBF4E6;
+  --text:#1F2329;
+  --text-2:#6B7280;
+  --text-3:#9AA1AC;
+  --bg:#F2F4F7;
+  --card:#FFFFFF;
+  --line:#EDEFF3;
+  --line-2:#F5F6F8;
+  --ok:#23A06B;
+  --ok-soft:#E8F7F0;
+  --warn:#E8891C;
+  --warn-soft:#FDF3E6;
+  --danger:#E5484D;
+  --danger-soft:#FDECEC;
+  --info:#3A7AFE;
+  --info-soft:#EAF1FE;
+  --r:14px;
+  --sh:0 2px 10px rgba(31,35,41,.06);
+  --sh-2:0 8px 28px rgba(31,35,41,.10);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  color:var(--text);background:
+    radial-gradient(1200px 600px at 15% -10%, #FDF0F3 0%, rgba(253,240,243,0) 60%),
+    radial-gradient(900px 500px at 100% 0%, #F4F1FB 0%, rgba(244,241,251,0) 55%),
+    var(--bg);
+  min-height:100vh;
+}
+.hidden{display:none !important}
+.muted{color:var(--text-3)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+b{font-weight:600}
+
+/* ===== 舞台布局 ===== */
+.stage{display:flex;gap:26px;justify-content:center;align-items:flex-start;padding:26px 20px 40px;max-width:1440px;margin:0 auto}
+.side{width:250px;flex:0 0 250px;display:flex;flex-direction:column;gap:14px;position:sticky;top:26px}
+.side-brand{display:flex;gap:10px;align-items:center;margin-bottom:2px}
+.side-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--brand) 0%,#E9A0A8 100%);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 4px 12px rgba(212,112,139,.32)}
+.side-title{font-size:15px;font-weight:700;letter-spacing:.2px}
+.side-sub{font-size:11.5px;color:var(--text-3);margin-top:2px}
+.side-card{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border:1px solid #E9EBF0;border-radius:12px;padding:13px 14px;box-shadow:var(--sh)}
+.side-card-t{font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:7px;letter-spacing:.3px}
+.side-card p{font-size:12px;line-height:1.7;color:var(--text-2);margin:0 0 6px}
+.side-card p:last-child{margin-bottom:0}
+.side-note{font-size:11px;color:var(--text-3);line-height:1.6;margin-top:9px}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.quick-grid button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 6px;font-size:11.5px;cursor:pointer;color:var(--text-2);transition:.18s;font-family:inherit}
+.quick-grid button:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px dashed var(--line)}
+.switch-row:first-of-type{border-top:0;padding-top:2px}
+.switch-row span{display:flex;flex-direction:column;gap:2px}
+.switch-row b{font-size:12.5px}
+.switch-row em{font-style:normal;font-size:10.5px;color:var(--text-3);line-height:1.5}
+.switch-row input{display:none}
+.switch{width:38px;height:21px;border-radius:11px;background:#D8DCE3;position:relative;transition:.22s;flex:0 0 38px;cursor:pointer}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.22s;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.switch-row input:checked + .switch{background:var(--brand)}
+.switch-row input:checked + .switch::after{left:19px}
+.switch-row select{font-family:inherit;font-size:11.5px;border:1px solid var(--line);border-radius:7px;padding:5px 6px;background:#fff;color:var(--text-2);cursor:pointer}
+.side-tip{background:linear-gradient(180deg,#FFFDFC,#FFF7F9);border-color:#F4E3E8}
+.side-page{font-size:16px;font-weight:700}
+.side-fr{font-size:11px;color:var(--brand);background:var(--brand-soft);display:inline-block;padding:2px 8px;border-radius:20px;margin:5px 0 8px;font-weight:600}
+.side-desc{font-size:12px;color:var(--text-2);line-height:1.7}
+.side-list{margin:0;padding-left:16px}
+.side-list li{font-size:11.5px;color:var(--text-2);line-height:1.8}
+
+/* ===== 手机壳 ===== */
+.phone-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.phone{width:390px;height:812px;background:#0E1116;border-radius:46px;padding:10px;position:relative;box-shadow:0 30px 60px rgba(31,35,41,.28),0 0 0 1px rgba(255,255,255,.08) inset;flex:0 0 auto}
+.phone-notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:118px;height:26px;background:#0E1116;border-radius:0 0 16px 16px;z-index:30}
+.screen{width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.statusbar{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;color:#111;flex:0 0 40px;background:transparent;position:relative;z-index:20}
+.sb-icons{display:flex;gap:5px;align-items:center}
+.sb-signal,.sb-wifi,.sb-batt{display:inline-block;background:#111}
+.sb-signal{width:16px;height:10px;clip-path:polygon(0 100%,20% 100%,20% 60%,40% 60%,40% 30%,60% 30%,60% 10%,80% 10%,80% 0,100% 0,100% 100%)}
+.sb-wifi{width:14px;height:11px;border-radius:2px;clip-path:polygon(50% 100%,0 30%,18% 22%,50% 62%,82% 22%,100% 30%)}
+.sb-batt{width:22px;height:11px;border-radius:3px;opacity:.9}
+.phone-tip{font-size:12px;color:var(--text-3)}
+
+/* 导航栏 */
+.navbar{height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;position:relative;background:#fff;border-bottom:1px solid var(--line-2);z-index:15}
+.navbar .nb-title{font-size:16px;font-weight:600}
+.navbar .nb-back{position:absolute;left:10px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:var(--text)}
+.navbar .nb-capsule{position:absolute;right:10px;display:flex;align-items:center;gap:8px;border:1px solid #E4E7EC;border-radius:14px;padding:3px 9px;background:#fff}
+.navbar .nb-capsule i{width:14px;height:14px;display:block;background:#9AA1AC;border-radius:50%;opacity:.55}
+.navbar .nb-capsule i.dot2{border-radius:2px;background:transparent;border:1.4px solid #9AA1AC}
+.navbar.transparent{background:transparent;border-bottom:0}
+.navbar.transparent .nb-title{opacity:0}
+
+/* 页面滚动区 */
+.page-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative}
+.page-scroll::-webkit-scrollbar{width:0}
+.page-pad{padding:12px 12px 24px}
+.page-pad.no-tab{padding-bottom:12px}
+
+/* TabBar */
+.tabbar{height:56px;flex:0 0 56px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;padding-bottom:4px;box-shadow:0 -2px 12px rgba(31,35,41,.04)}
+.tabbar .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--text-3);font-size:10.5px;position:relative}
+.tabbar .tab.on{color:var(--brand)}
+.tabbar .tab .ico{width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:17px;line-height:1}
+.tabbar .tab .badge{position:absolute;top:2px;right:22%;background:var(--danger);color:#fff;font-size:9px;border-radius:9px;padding:0 4px;min-width:14px;text-align:center;line-height:14px}
+
+/* ===== 通用组件 ===== */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px;margin-bottom:10px}
+.card.tight{padding:10px 12px}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
+.card-t{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px}
+.card-t .ico{font-size:15px}
+.card-more{font-size:11.5px;color:var(--text-3);cursor:pointer}
+.row{display:flex;align-items:center;gap:10px}
+.row.between{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+
+.btn{border:0;border-radius:10px;padding:10px 14px;font-size:14px;font-family:inherit;cursor:pointer;background:#F1F3F6;color:var(--text-2);transition:.16s;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--brand),#E0909C);color:#fff;box-shadow:0 4px 12px rgba(212,112,139,.28);font-weight:600}
+.btn-gold{background:linear-gradient(135deg,#D9B36B,#C29A4F);color:#fff;box-shadow:0 4px 12px rgba(194,154,79,.3);font-weight:600}
+.btn-dark{background:var(--text);color:#fff}
+.btn-outline{background:#fff;border:1px solid var(--line);color:var(--text-2)}
+.btn-block{display:block;width:100%}
+.btn.sm{padding:6px 10px;font-size:12px;border-radius:8px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.btn-row{display:flex;gap:8px}
+
+.tag{font-size:10.5px;padding:2px 7px;border-radius:6px;background:#F1F3F6;color:var(--text-2);white-space:nowrap;font-weight:500}
+.tag.base{background:var(--brand-soft);color:var(--brand)}
+.tag.sub{background:var(--gold-soft);color:var(--gold)}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.danger{background:var(--danger-soft);color:var(--danger)}
+.tag.info{background:var(--info-soft);color:var(--info)}
+.tag.fr{background:#EEF1F6;color:#7A8394;font-family:ui-monospace,Menlo,monospace;font-size:10px}
+
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:#fff;border-radius:var(--r);padding:12px 10px;box-shadow:var(--sh);text-align:center}
+.stat .n{font-size:20px;font-weight:700;line-height:1.2}
+.stat .l{font-size:11px;color:var(--text-3);margin-top:3px}
+.stat .d{font-size:10px;margin-top:4px}
+.up{color:var(--danger)}.down{color:var(--ok)}
+
+.list-item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line-2)}
+.list-item:last-child{border-bottom:0}
+.avatar{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#F3D7DC,#F7E9EB);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--brand);flex:0 0 38px}
+.avatar.lg{width:46px;height:46px;flex:0 0 46px;border-radius:12px}
+.avatar.round{border-radius:50%}
+.fi{flex:1;min-width:0}
+.fi .t{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:5px}
+.fi .s{font-size:11.5px;color:var(--text-3);margin-top:3px;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fi .s.wrap{white-space:normal}
+
+.input,.textarea,select.inp{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px;font-family:inherit;background:#fff;color:var(--text);outline:none}
+.input:focus{border-color:var(--brand)}
+.textarea{min-height:74px;resize:none;line-height:1.6}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:12px;color:var(--text-2);margin-bottom:5px;font-weight:600}
+.field .hint{font-size:10.5px;color:var(--text-3);margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);border-radius:20px;padding:5px 11px;font-size:12px;cursor:pointer;background:#fff;color:var(--text-2);transition:.16s;font-family:inherit}
+.chip.on{background:var(--brand-soft);border-color:var(--brand);color:var(--brand);font-weight:600}
+.seg{display:flex;background:#F1F3F6;border-radius:10px;padding:3px;gap:2px}
+.seg div{flex:1;text-align:center;padding:7px 4px;font-size:12.5px;border-radius:8px;cursor:pointer;color:var(--text-2);transition:.16s}
+.seg div.on{background:#fff;color:var(--text);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+
+/* 订阅引导态 */
+.locked{position:relative}
+.locked .lock-mask{position:absolute;inset:0;background:rgba(255,255,255,.72);backdrop-filter:blur(1.5px);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;z-index:5}
+.lock-mask .lk-ico{font-size:22px}
+.lock-mask .lk-t{font-size:13px;font-weight:700;color:var(--gold)}
+.lock-mask .lk-s{font-size:11px;color:var(--text-3)}
+.lock-mask .btn{padding:6px 14px;font-size:12px}
+.sub-bar{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,#FDF7EA,#FFFDF8);border:1px solid #F0E4CC;border-radius:10px;padding:9px 11px;margin-bottom:10px}
+.sub-bar .sb-t{font-size:12px;color:#8A6D2F;font-weight:600;flex:1;line-height:1.5}
+.sub-bar .sb-t em{font-style:normal;color:var(--gold)}
+
+/* AI 生成 / 输出 */
+.ai-out{background:linear-gradient(180deg,#FFFDFE,#FDF7F9);border:1px solid #F6E4E9;border-radius:12px;padding:12px;margin-top:10px}
+.ai-out .ai-h{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--brand);font-weight:700;margin-bottom:8px}
+.ai-out .ai-h .spark{font-size:13px}
+.ai-body{font-size:12.5px;line-height:1.85;color:#3A4048;white-space:pre-wrap}
+.ai-body .h{font-weight:700;color:var(--text);display:block;margin:8px 0 2px}
+.ai-body .h:first-child{margin-top:0}
+.skeleton{background:linear-gradient(90deg,#F1F3F6 25%,#E9ECF1 37%,#F1F3F6 63%);background-size:400% 100%;animation:sk 1.2s ease infinite;border-radius:6px;height:12px;margin-bottom:8px}
+@keyframes sk{0%{background-position:100% 50%}100%{background-position:0 50%}}
+.thinking{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--brand);padding:10px 0}
+.dots i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand);margin-right:3px;animation:bl 1s infinite}
+.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+
+/* 聊天气泡 */
+.chat{padding:12px;display:flex;flex-direction:column;gap:12px}
+.msg{display:flex;gap:8px;align-items:flex-start}
+.msg.me{flex-direction:row-reverse}
+.msg .bubble{max-width:74%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.65;background:#fff;box-shadow:var(--sh);border-top-left-radius:3px}
+.msg.me .bubble{background:var(--brand);color:#fff;border-top-left-radius:12px;border-top-right-radius:3px}
+.msg.ai .bubble{background:#fff;border-left:2px solid var(--brand);border-top-left-radius:3px}
+.msg .who{font-size:10px;color:var(--text-3);margin-top:3px;text-align:center;flex:0 0 32px}
+.msg .who .avatar{width:30px;height:30px;flex:none;font-size:11px}
+
+/* 漏斗 */
+.funnel{margin-top:4px}
+.fun-row{margin-bottom:9px}
+.fun-t{display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-2);margin-bottom:4px}
+.fun-bar{height:22px;background:#F1F3F6;border-radius:6px;overflow:hidden;position:relative}
+.fun-bar i{display:block;height:100%;background:linear-gradient(90deg,#E39BAC,var(--brand));border-radius:6px;transition:width .8s cubic-bezier(.2,.8,.2,1);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:10.5px;font-weight:600;min-width:40px}
+
+/* 进度条 */
+.prog{height:6px;background:#F1F3F6;border-radius:4px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--brand);border-radius:4px}
+.prog.gold i{background:linear-gradient(90deg,#D9B36B,var(--gold))}
+
+/* 表格 */
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.tbl th{text-align:left;color:var(--text-3);font-weight:600;padding:7px 4px;border-bottom:1px solid var(--line)}
+.tbl td{padding:9px 4px;border-bottom:1px solid var(--line-2);color:var(--text-2)}
+.tbl td:first-child{color:var(--text);font-weight:500}
+
+/* 空态 / 异常态 */
+.empty{padding:34px 20px;text-align:center;color:var(--text-3)}
+.empty .e-ico{font-size:38px;opacity:.5;margin-bottom:8px}
+.empty .e-t{font-size:13px;color:var(--text-2);margin-bottom:4px}
+.empty .e-s{font-size:11.5px;line-height:1.6}
+.alert{display:flex;gap:8px;align-items:flex-start;border-radius:10px;padding:10px 11px;font-size:12px;line-height:1.65;margin-bottom:10px}
+.alert.warn{background:var(--warn-soft);color:#8A5A12;border:1px solid #F5E3C8}
+.alert.danger{background:var(--danger-soft);color:#8C2B2E;border:1px solid #F6D8D9}
+.alert.info{background:var(--info-soft);color:#25508F;border:1px solid #D6E3FB}
+.alert .a-ico{font-size:13px}
+
+/* Toast & Sheet */
+.toast-layer{position:absolute;left:0;right:0;top:96px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:60;pointer-events:none}
+.toast{background:rgba(31,35,41,.9);color:#fff;font-size:12.5px;padding:9px 16px;border-radius:20px;animation:tin .25s;box-shadow:var(--sh-2);max-width:80%;text-align:center}
+@keyframes tin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.sheet-layer{position:absolute;inset:0;z-index:70;display:none}
+.sheet-layer.on{display:block}
+.sheet-mask{position:absolute;inset:0;background:rgba(20,22,26,.42);animation:fin .2s}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;padding:16px 16px 24px;animation:sup .26s cubic-bezier(.2,.9,.3,1);max-height:76%;overflow-y:auto}
+@keyframes sup{from{transform:translateY(100%)}to{transform:none}}
+.sheet-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sheet-t{font-size:15.5px;font-weight:700}
+.sheet-x{cursor:pointer;color:var(--text-3);font-size:18px;line-height:1}
+
+/* 顶部渐变头 */
+.hero{background:linear-gradient(135deg,#E98BA1 0%,#D4708B 45%,#B85A75 100%);padding:14px 14px 26px;color:#fff;border-radius:0 0 20px 20px}
+.hero .h-store{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700}
+.hero .h-store .avatar{background:rgba(255,255,255,.22);color:#fff;width:32px;height:32px;flex:0 0 32px;font-size:13px}
+.hero .h-sub{font-size:11px;opacity:.85;margin-top:3px}
+.hero .h-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.hero .h-stat{text-align:center}
+.hero .h-stat .n{font-size:18px;font-weight:700}
+.hero .h-stat .l{font-size:10px;opacity:.85;margin-top:2px}
+.up-card{margin-top:-14px}
+
+/* 卡片入口（Agent） */
+.agent-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:13px;margin-bottom:10px;display:flex;gap:11px;cursor:pointer;transition:.18s;border:1px solid transparent}
+.agent-card:active{transform:scale(.985)}
+.agent-card:hover{border-color:#F6E4E9}
+.agent-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex:0 0 44px}
+.ac-1{background:linear-gradient(135deg,#FFE9EE,#FFD3DC)}
+.ac-2{background:linear-gradient(135deg,#FFF1E0,#FFE0BE)}
+.ac-3{background:linear-gradient(135deg,#E9F0FF,#D7E4FF)}
+.ac-4{background:linear-gradient(135deg,#E8F7F0,#CFF0DF)}
+.ac-5{background:linear-gradient(135deg,#F0E9FF,#E0D4FF)}
+.agent-m{flex:1;min-width:0}
+.agent-m .t{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px}
+.agent-m .d{font-size:11.5px;color:var(--text-3);margin-top:4px;line-height:1.55}
+.agent-m .tags{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+
+/* 步骤 / 流程 */
+.steps{display:flex;align-items:center;gap:4px;padding:4px 0}
+.step{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-3)}
+.step .dot{width:16px;height:16px;border-radius:50%;background:#EDEFF3;color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center}
+.step.on .dot{background:var(--brand)}
+.step.on{color:var(--brand);font-weight:600}
+.step-line{flex:1;height:1px;background:var(--line)}
+
+/* 平台端 PC */
+.pc-stage{display:block;max-width:1440px}
+.pc-top{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #E9EBF0;border-radius:14px;padding:14px 18px;box-shadow:var(--sh);margin-bottom:14px}
+.pc-brand{display:flex;gap:11px;align-items:center}
+.pc-body{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.pc-card{background:#fff;border:1px solid #E9EBF0;border-radius:14px;padding:16px 18px;box-shadow:var(--sh)}
+.pc-card.c3{grid-column:span 3}.pc-card.c4{grid-column:span 4}
+.pc-card.c6{grid-column:span 6}.pc-card.c8{grid-column:span 8}.pc-card.c12{grid-column:span 12}
+.pc-kpi{font-size:26px;font-weight:700;line-height:1.2}
+.pc-lbl{font-size:12px;color:var(--text-3);margin-top:4px}
+.pc-ttl{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.bars{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:12px}
+.bar-row .bl{flex:0 0 84px;color:var(--text-2)}
+.bar-row .bt{flex:1;height:16px;background:#F1F3F6;border-radius:5px;overflow:hidden}
+.bar-row .bt i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#E39BAC,var(--brand))}
+.bar-row .bv{flex:0 0 46px;text-align:right;color:var(--text-2);font-size:11.5px}
+.health{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:12.5px}
+.health:last-child{border-bottom:0}
+.hdot{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+.line-chart{display:flex;align-items:flex-end;gap:5px;height:110px;margin-top:6px}
+.line-chart .lc{flex:1;background:linear-gradient(180deg,#F3B7C4,#D4708B);border-radius:4px 4px 0 0;position:relative;transition:.6s}
+.line-chart .lc span{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:9.5px;color:var(--text-3)}
+
+/* 响应式 */
+@media (max-width:1180px){
+  .side-right{display:none}
+}
+@media (max-width:900px){
+  .stage{padding:14px 10px 30px;gap:0}
+  .side-left,.side-right{display:none}
+  .phone{width:100%;max-width:430px;height:auto;aspect-ratio:390/812;border-radius:34px;padding:8px}
+  .screen{border-radius:28px}
+  .phone-notch{display:none}
+  .phone-wrap{width:100%}
+  .pc-card.c3,.pc-card.c4,.pc-card.c6,.pc-card.c8{grid-column:span 12}
+}
+
+/* 移动端演示控制（底部抽屉） */
+.m-ctrl-input{display:none}
+.m-ctrl-fab{display:none}
+.m-ctrl-mask{display:none}
+@media (max-width:900px){
+  .m-ctrl-fab{
+    display:flex;align-items:center;gap:6px;
+    position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:80;
+    padding:11px 16px;border-radius:999px;
+    background:linear-gradient(135deg,#B5546F,#8C2F4A);color:#fff;
+    font-size:13px;font-weight:600;letter-spacing:.3px;
+    box-shadow:0 10px 26px rgba(140,47,74,.34);
+    cursor:pointer;user-select:none;
+  }
+  .m-ctrl-fab::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;opacity:.9}
+  .m-ctrl-mask{
+    display:block;position:fixed;inset:0;z-index:89;
+    background:rgba(24,18,20,.44);opacity:0;pointer-events:none;transition:opacity .24s;
+  }
+  #mCtrl:checked ~ .m-ctrl-mask{opacity:1;pointer-events:auto}
+  #mCtrl:checked ~ .m-ctrl-fab{opacity:0;pointer-events:none}
+  .stage{padding-bottom:84px}
+  .side-left{
+    display:block!important;
+    position:fixed;left:0;right:0;bottom:0;z-index:90;
+    background:#fff;border-radius:22px 22px 0 0;
+    padding:18px 16px calc(22px + env(safe-area-inset-bottom));
+    max-height:78vh;overflow:auto;
+    transform:translateY(112%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    box-shadow:0 -14px 36px rgba(0,0,0,.2);
+  }
+  #mCtrl:checked ~ .stage .side-left{transform:translateY(0)}
+  .side-left .side-brand{display:none}
+  .side-left .side-card:first-of-type{margin-top:0}
+  .side-left::before{
+    content:"";display:block;width:40px;height:4px;border-radius:2px;
+    background:#e6dfe2;margin:-6px auto 12px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- 移动端演示控制入口（≤900px 显示） -->
+<input type="checkbox" id="mCtrl" class="m-ctrl-input">
+<label for="mCtrl" class="m-ctrl-mask"></label>
+<label for="mCtrl" class="m-ctrl-fab">演示控制</label>
+
+<!-- ============ 手机演示视图 ============ -->
+<div class="stage" id="stage-phone">
+
+  <aside class="side side-left">
+    <div class="side-brand">
+      <div class="side-logo">美</div>
+      <div>
+        <div class="side-title">美业智能 Agent 系统</div>
+        <div class="side-sub">小程序内嵌形态 · 交互演示 Demo V1.0</div>
+      </div>
+    </div>
+
+    <div class="side-card">
+      <div class="side-card-t">演示说明</div>
+      <p>本 Demo 依据《美业智能Agent系统 PRD V1.0》制作，覆盖五大 Agent 共 <b>25 项功能点</b>（基础 15 / 订阅增值 10）、账号体系与门店端、平台端数据看板。</p>
+      <p class="muted">点击手机屏幕内任意元素即可交互；所有 AI 生成结果均为演示用静态内容。</p>
+    </div>
+
+    <div class="side-card">
+      <div class="side-card-t">快捷跳转</div>
+      <div class="quick-grid" id="quickGrid"></div>
+    </div>
+
+    <div class="side-card">
+      <div class="side-card-t">演示开关</div>
+      <label class="switch-row">
+        <span>
+          <b id="subLabel">订阅状态</b>
+          <em id="subHint">已订阅全部增值包</em>
+        </span>
+        <input type="checkbox" id="subToggle" checked onchange="App.toggleSubscribe(this.checked)">
+        <i class="switch"></i>
+      </label>
+      <label class="switch-row">
+        <span>
+          <b>当前角色</b>
+          <em id="roleHint">门店管理员（最高权限）</em>
+        </span>
+        <select id="roleSelect" onchange="App.setRole(this.value)">
+          <option value="admin">管理员</option>
+          <option value="operator">运营</option>
+          <option value="tester">测试</option>
+        </select>
+      </label>
+      <div class="side-note">关闭订阅可查看增值功能的<b>置灰引导态</b>；切换角色可查看<b>权限差异</b>。</div>
+    </div>
+
+    <div class="side-card side-tip">
+      <div class="side-card-t">平台端看板</div>
+      <p>面向 SaaS 运营方的多门店总览（宽屏视图）。</p>
+      <button class="btn btn-dark btn-block" onclick="App.go('platform')">切换到平台端看板 →</button>
+    </div>
+  </aside>
+
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="screen">
+        <div class="statusbar">
+          <span class="sb-time" id="sbTime">9:41</span>
+          <span class="sb-icons">
+            <i class="sb-signal"></i><i class="sb-wifi"></i><i class="sb-batt"></i>
+          </span>
+        </div>
+        <div class="navbar" id="navbar"></div>
+        <div class="page-scroll" id="page"></div>
+        <div class="tabbar" id="tabbar"></div>
+        <div class="toast-layer" id="toastLayer"></div>
+        <div class="sheet-layer" id="sheetLayer"></div>
+      </div>
+    </div>
+    <div class="phone-tip">微信小程序 · 伊人美学（静安店）</div>
+  </div>
+
+  <aside class="side side-right">
+    <div class="side-card">
+      <div class="side-card-t">当前页面</div>
+      <div class="side-page" id="sidePageName">登录</div>
+      <div class="side-fr" id="sidePageFr">FR-6-1 登录能力</div>
+      <div class="side-desc" id="sidePageDesc"></div>
+    </div>
+    <div class="side-card">
+      <div class="side-card-t">本页可尝试</div>
+      <ul class="side-list" id="sidePageTips"></ul>
+    </div>
+    <div class="side-card side-tip">
+      <div class="side-card-t">需求编号规则</div>
+      <p class="mono">FR-&lt;模块&gt;-&lt;序号&gt;<br>1 招聘 · 2 转让引流 · 3 运营<br>4 客情 · 5 短视频 · 6 账号 · 7 集成看板</p>
+      <p class="muted">[基础] 一次性购买 · [订阅] 订阅增值</p>
+    </div>
+  </aside>
+</div>
+
+<!-- ============ 平台端宽屏视图 ============ -->
+<div class="stage pc-stage hidden" id="stage-pc">
+  <div class="pc-top">
+    <div class="pc-brand">
+      <div class="side-logo">美</div>
+      <div>
+        <div class="side-title">平台端 · 多门店运营看板</div>
+        <div class="side-sub">SaaS 运营方视图 · FR-7-3 数据看板</div>
+      </div>
+    </div>
+    <button class="btn btn-outline" onclick="App.go('home')">← 返回门店端小程序</button>
+  </div>
+  <div class="pc-body" id="pcBody"></div>
+</div>
+
+<script>
+/* mock.js */
+/* ===== 演示数据（Mock） ===== */
+const DB = {
+  store: { name:'伊人美学', branch:'上海静安店', type:'美甲 · 美睫 · 皮肤管理', seat:8, staff:12, city:'上海', level:'订阅版 · 全功能' },
+
+  /* FR-1 招聘 */
+  candidates: [
+    { id:1, name:'林小满', phone:'138****6721', age:26, exp:'4年', skill:['手绘','日式美甲','延长甲'], pay:'6-8K', status:'A', where:'本地', arrive:'1周内',
+      src:'美业人才库', time:'09:12', lv:'A 级 · 强烈推荐',
+      reason:'4 年美甲经验含手绘专长，与岗位「3年以上手绘经验」完全匹配；期望薪资 6-8K 落在 JD 区间内；本地可 1 周内到岗。',
+      chat:[
+        {m:'ai',t:'你好呀～我是伊人美学静安店的招聘助手。看到你投递了美甲师岗位，方便了解一下你的经验吗？'},
+        {m:'ta',t:'你好，我做美甲4年了，之前在静安寺一家日式店。'},
+        {m:'ai',t:'很棒！想确认几件事：① 手绘/彩绘是否熟练？② 期望薪资范围？③ 最快什么时候能到岗？'},
+        {m:'ta',t:'手绘没问题，日式延长甲也做。薪资希望6-8K，我住浦东，1周内可以入职。'},
+        {m:'ai',t:'收到！我们门店薪资区间 6-10K（底薪+提成），包住宿，地址静安区。方便的话这周可以来店里试手吗？'},
+        {m:'ta',t:'可以的，周三下午有空。'},
+        {m:'ai',t:'已为你预约周三 14:00 到店试手，稍后发送门店定位与联系人。'}
+      ]},
+    { id:2, name:'周颖', phone:'159****3308', age:31, exp:'6年', skill:['美睫','嫁接','培训'], pay:'8-10K', status:'B', where:'本地', arrive:'2周',
+      src:'BOSS渠道', time:'10:04', lv:'B 级 · 备选',
+      reason:'6 年经验但主攻美睫，与本次美甲岗位核心技能部分重合；期望 8-10K 接近区间上限；到岗需 2 周（在职交接）。',
+      chat:[
+        {m:'ai',t:'你好，我们是伊人美学静安店，招聘美甲师。请问你目前在职吗？'},
+        {m:'ta',t:'在的，做美睫培训，想转做美甲多一些。'},
+        {m:'ai',t:'明白了。本岗位偏手绘美甲，你在这块熟练度如何？'},
+        {m:'ta',t:'会基础彩绘，复杂手绘还在练。薪资希望8-10K。'},
+        {m:'ai',t:'感谢坦诚～我们会把你的信息转给店长，若后续开放美睫+美甲复合岗位会优先联系你。'}
+      ]},
+    { id:3, name:'王倩', phone:'186****9052', age:24, exp:'1年', skill:['基础护理'], pay:'15K以上', status:'C', where:'外地', arrive:'不确定',
+      src:'美业人才库', time:'11:27', lv:'C 级 · 建议淘汰',
+      reason:'期望薪资 15K 以上，显著超出 JD 区间 6-10K；现居外地且不计划搬迁，与门店到岗要求冲突；从业 1 年不满足「3年以上手绘经验」。',
+      chat:[
+        {m:'ai',t:'你好，方便确认一下你目前所在城市与期望薪资吗？'},
+        {m:'ta',t:'我在杭州，薪资期望15K以上吧。'},
+        {m:'ai',t:'感谢回复～本岗位在上海静安区，薪资区间 6-10K，遗憾与你的期望差距较大，祝求职顺利。'}
+      ]},
+    { id:4, name:'陈思思', phone:'137****2288', age:28, exp:'3年', skill:['手绘','晕染','穿戴甲'], pay:'7-9K', status:'A', where:'本地', arrive:'随时',
+      src:'门店直投', time:'14:38', lv:'A 级 · 强烈推荐',
+      reason:'3 年经验含手绘与穿戴甲，符合岗位硬要求；期望 7-9K 位于区间中部；本地随时到岗，试手安排成本低。',
+      chat:[
+        {m:'ai',t:'你好～看到你作品集里有穿戴甲内容，很符合我们秋季新款方向，方便聊聊吗？'},
+        {m:'ta',t:'好呀，我做穿戴甲挺久的，也做手绘。'},
+        {m:'ai',t:'太好了。薪资方面我们的区间是 6-10K 加提成，你期望多少？最快什么时候能来？'},
+        {m:'ta',t:'7-9K可以，我随时能上班。'}
+      ]}
+  ],
+  jobs: [
+    { t:'美甲师（手绘方向）', city:'上海静安', pay:'6-10K', n:38, status:'招聘中', ver:3 },
+    { t:'美睫师', city:'上海静安', pay:'7-12K', n:21, status:'招聘中', ver:2 },
+    { t:'皮肤管理师', city:'上海静安', pay:'8-15K', n:12, status:'沟通中', ver:1 }
+  ],
+  channels: [
+    { n:'美业人才库', s:'已对接', t:'3分钟前', q:'200 份/月', ok:true },
+    { n:'BOSS直聘渠道', s:'已对接', t:'12分钟前', q:'150 份/月', ok:true },
+    { n:'门店直投小程序', s:'已对接', t:'刚刚', q:'不限', ok:true },
+    { n:'本地生活招聘位', s:'授权已过期', t:'2天前', q:'—', ok:false }
+  ],
+
+  /* FR-2 转让引流 */
+  transfer: { city:'上海', area:'静安区 · 曹家渡商圈', size:'128㎡', seat:'8 工位 + 2 房间', rent:'剩余 3 年', fee:'28 万', revenue:'月营业额 9-12 万', members:'老客 300+', equip:'进口光疗仪 2 台、皮肤管理仪 1 台、甲油胶库存 600+ 支' },
+  materials: [
+    { t:'商转平台版（详实严谨）', tag:'58同城 / 商铺转让网', body:'【静安曹家渡 · 美容美体店整体转让】\n面积：128㎡，8 工位 + 2 独立VIP房间\n租期：剩余 3 年，租金 2.3 万/月，物业关系良好\n转让费：28 万（含全部设备与存货，可小刀）\n经营现状：月营业额 9-12 万，老客 300+，美团评分 4.8\n转让原因：店主因家庭迁移外地，忍痛转让\n亮点：社区成熟商圈、设备齐全可拎包营业、员工可留任\n（本信息由门店提供，以实际勘察为准）' },
+    { t:'朋友圈版（情感故事）', tag:'微信朋友圈 / 社群', body:'在曹家渡开了 6 年的小店，要和大家说再见了。\n\n从 8 张工位到现在 300 多个老客，每一个指甲都记得。\n因为家人生病需要回老家照顾，只能忍痛转让。\n\n128㎡，设备全留，8 个工位 2 个房间，\n接手就能开门营业，老客愿意跟着留下。\n\n希望下一个主人，也像我一样爱它。\n（转让费 28 万，可面议，诚心者优先）' },
+    { t:'短视频口播脚本版', tag:'抖音 / 视频号 30s', body:'【0-3s 钩子】在上海静安，128平美容店 28 万转让，是捡漏还是坑？\n【3-10s】看数据：老客 300+，月营业额 9-12 万，美团 4.8 分。\n【10-20s】含 2 台进口光疗仪、600 多支甲油胶，8 工位 2 房间。\n【20-26s】店主因家庭迁移急转，员工可留任。\n【26-30s 引导】想看店的评论区扣「1」，我发你完整清单。' }
+  ],
+  flowChannels: [
+    { n:'58同城商铺转让', st:'已发布', r:'曝光 1,284 / 咨询 9', ok:true },
+    { n:'抖音本地生活', st:'审核中', r:'预计 2 小时内', ok:true, wait:true },
+    { n:'美团·店铺转让', st:'发布失败', r:'原因：缺少营业执照备案', ok:false },
+    { n:'小红书本地推', st:'已发布', r:'曝光 3,102 / 咨询 14', ok:true },
+    { n:'微信朋友圈广告', st:'未开通', r:'需完成渠道授权', ok:false }
+  ],
+  leads: [
+    { n:'张先生', phone:'138****0091', src:'58同城', q:'含哪些设备？转让费能少多少？', lv:'高', t:'09:41' },
+    { n:'李女士', phone:'186****7745', src:'小红书', q:'租期到什么时候？能看店吗？', lv:'高', t:'10:22' },
+    { n:'王女士', phone:'135****3320', src:'抖音', q:'老客真的会留下来吗？', lv:'中', t:'11:05' },
+    { n:'匿名', phone:'159****8802', src:'58同城', q:'随便问问', lv:'低', t:'13:18' }
+  ],
+
+  /* FR-3 运营 */
+  plan: { goal:'复购提升', budget:'1.5 万', cycle:'21 天', proj:'水光补水 + 深层清洁套餐' },
+  materialsStock: [
+    { n:'甲油胶（秋季新色）', u:'支', stock:186, safe:120, use:'全手甲 0.5g/次', st:'充足' },
+    { n:'底胶 / 封层', u:'瓶', stock:9, safe:15, use:'全手甲 0.3g/次', st:'低于安全库存' },
+    { n:'美睫嫁接胶水', u:'支', stock:24, safe:10, use:'嫁接 0.2ml/次', st:'充足' },
+    { n:'院线精华（水光）', u:'盒', stock:6, safe:12, use:'水光项目 1 盒/次', st:'低于安全库存' },
+    { n:'一次性床单', u:'包', stock:31, safe:20, use:'1 张/客', st:'充足' },
+    { n:'纹绣色料（棕咖）', u:'瓶', stock:3, safe:5, use:'雾眉 0.1ml/次', st:'临近效期' }
+  ],
+  copyTargets: [
+    { n:'小程序项目页', st:'待更新', d:'睫毛嫁接 · 换季调价' },
+    { n:'朋友圈话术', st:'待更新', d:'3 条不同角度' },
+    { n:'社群通知', st:'待更新', d:'老客专享价' },
+    { n:'店内海报文案', st:'待更新', d:'含主标题与副标' },
+    { n:'点评平台简介', st:'待更新', d:'同步新卖点' }
+  ],
+
+  /* FR-4 客情 */
+  appts: [
+    { t:'头皮护理 90分钟', s:'林技师', d:'今天 14:00', st:'已确认', n:'张女士', lv:'钻石会员' },
+    { t:'日式美甲（手绘）', s:'陈技师', d:'今天 16:30', st:'已确认', n:'刘女士', lv:'金卡' },
+    { t:'美瞳线补色', s:'周技师', d:'明天 10:00', st:'待确认', n:'吴女士', lv:'金卡' },
+    { t:'水光补水', s:'—', d:'明天 15:00', st:'候补中', n:'孙女士', lv:'新客' }
+  ],
+  visits: [
+    { n:'刘女士', p:'美瞳线嫁接 · 第2天', t:'体验回访', st:'已发送', r:'有点干痒', risk:true, tag:'不适反馈' },
+    { n:'陈女士', p:'雾眉 · 补色到期前7天', t:'到期提醒', st:'已发送', r:'好的，我下周来', risk:false, tag:'有意向' },
+    { n:'黄女士', p:'90天未到店', t:'久未到店唤醒', st:'已发送', r:'最近忙，五一再说', risk:false, tag:'高意向-延后' },
+    { n:'赵女士', p:'深层清洁 · 第3天', t:'体验回访', st:'已发送', r:'挺舒服的，谢谢', risk:false, tag:'满意' }
+  ],
+  qaList: [
+    { q:'孕期能不能做美甲？', a:'孕期前三个月建议避免美甲项目（含甲油胶气味与久坐）；中后期如确需，建议选择通风良好时段、缩短时长，并提前咨询医生意见。\n※ 涉及安全禁忌，本回答为保守建议，最终以到店面诊确认为准。', hit:true, type:'安全禁忌' },
+    { q:'储值卡可以两个人一起用吗？', a:'本店储值卡支持本人及直系亲属（配偶、父母、子女）共同使用，到店出示卡号或预留手机号即可。不可转让给非亲属朋友使用。', hit:true, type:'门店规则' },
+    { q:'水光补水做完多久能化妆？', a:'建议术后 6 小时内不化妆、24 小时内避免含酸类与去角质产品，注意补水防晒。如有持续泛红请及时联系顾问。', hit:true, type:'项目护理' },
+    { q:'你们有医美资质吗？', a:'（未命中知识库 → 已转入「待补充」列表并通知店长）\n本问题涉及资质与合规表述，由门店管理员统一答复。', hit:false, type:'未命中' }
+  ],
+
+  /* FR-5 短视频 */
+  scripts: [
+    { t:'新款穿戴甲 · 3秒钩子版', hook:'「这副穿戴甲，我敢说你刷到就想下单」', body:'0-3s：成品特写 + 手指轻敲桌面声\n3-8s：开盒展示 6 片不同花色\n8-18s：上手对比（裸甲 vs 穿戴甲）\n18-25s：佩戴教程快剪\n25-30s：价格 + 门店地址引导\nBGM：轻快 city pop｜话题：#穿戴甲 #秋季美甲 #静安美甲' },
+    { t:'前后对比 · 效果展示版', hook:'「做之前 vs 做之后，你敢信是同一双手？」', body:'0-3s：分屏对比\n3-12s： 과정 手部护理 + 去死皮 + 上色\n12-22s：成品多角度光下展示\n22-30s：顾客真实反应 + 引导私信\nBGM：节奏感强｜话题：#美甲前后对比 #手部护理' },
+    { t:'科普避坑 · 信任建立版', hook:'「做美甲前，这 3 件事一定要问清楚」', body:'0-3s：店长真人出镜提问\n3-20s：三条干货（甲面损伤、胶水成分、卸甲方式）\n20-28s：门店消毒流程展示\n28-30s：引导到店\n※ 已规避功效与医疗宣称，符合平台合规要求', safe:true }
+  ],
+  platforms: [
+    { n:'抖音', st:'已发布', link:'dy.abc/9Fk2', ok:true, v:'播放 12,480' },
+    { n:'视频号', st:'已发布', link:'wx.sp/q7d1', ok:true, v:'播放 3,204' },
+    { n:'小红书', st:'审核中', link:'—', ok:true, wait:true, v:'—' },
+    { n:'快手', st:'发布失败', link:'—', ok:false, v:'原因：封面含二维码' }
+  ],
+  comments: [
+    { u:'@小圆脸', t:'这个多少钱呀？', i:'询价', r:'感谢喜欢～穿戴甲单片 39 元起，整套 6 片 199 元，本周到店可享新客 8 折。私信发你本周可约时段？', lv:'高意向' },
+    { u:'@Amy', t:'在哪个区？周末能约吗？', i:'预约意向', r:'我们在静安区曹家渡·地铁 2 号口步行 3 分钟。周六还有 14:00 / 16:30 两个档，私信帮您留位～', lv:'高意向' },
+    { u:'@路人甲', t:'上次做完过敏了', i:'负面投诉', r:'非常抱歉给您带来不好的体验。我们已私信联系您处理，请方便时回复，店长会亲自跟进。（评论区不做辩解）', lv:'待人工' },
+    { u:'@哈哈哈', t:'沙发', i:'无效评论', r:'—', lv:'不回复' }
+  ],
+
+  /* FR-6 账号 */
+  members: [
+    { n:'周敏', role:'门店管理员', phone:'138****0001', st:'生效中', exp:'长期', store:'静安店' },
+    { n:'李佳', role:'运营', phone:'159****2204', st:'生效中', exp:'2026-12-31', store:'静安店' },
+    { n:'王雪', role:'运营', phone:'186****7788', st:'生效中', exp:'2026-12-31', store:'静安店' },
+    { n:'测试账号A', role:'测试', phone:'137****0000', st:'生效中', exp:'剩余 7 天', store:'沙箱租户' }
+  ],
+  logs: [
+    { t:'2026-11-02 09:41', m:'微信快捷登录', d:'iPhone 15 · 上海', r:'成功' },
+    { t:'2026-11-02 08:12', m:'手机号登录', d:'iPhone 15 · 上海', r:'成功' },
+    { t:'2026-11-01 22:47', m:'手机号登录', d:'Android · 杭州', r:'失败（验证码错误）' },
+    { t:'2026-11-01 22:45', m:'手机号登录', d:'Android · 杭州', r:'失败（异地二次验证未通过）' },
+    { t:'2026-10-31 14:03', m:'微信快捷登录', d:'iPad · 上海', r:'成功' }
+  ],
+  integrations: [
+    { n:'美业人才库', c:'招聘', st:'已授权', exp:'2027-03-01', sync:'3 分钟前', ok:true },
+    { n:'BOSS直聘渠道', c:'招聘', st:'已授权', exp:'2026-12-15', sync:'12 分钟前', ok:true },
+    { n:'58同城 / 小红书流量池', c:'转让引流', st:'已授权', exp:'2027-01-20', sync:'8 分钟前', ok:true },
+    { n:'抖音 / 视频号开放平台', c:'短视频', st:'已授权', exp:'2026-11-28', sync:'刚刚', ok:true },
+    { n:'门店会员系统（客如云）', c:'客情', st:'授权已过期', exp:'2026-10-30', sync:'3 天前', ok:false },
+    { n:'背景核验数据源', c:'招聘', st:'未开通', exp:'—', sync:'—', ok:false },
+    { n:'音视频服务（RTC）', c:'招聘', st:'已授权', exp:'2027-05-01', sync:'—', ok:true }
+  ],
+
+  /* 平台端 */
+  pc: {
+    kpi:[ {n:'1,286',l:'接入门店',d:'+38 本月'}, {n:'942',l:'周活跃门店',d:'73.2%'}, {n:'68.4%',l:'增值订阅渗透率',d:'+5.2pt'}, {n:'99.2%',l:'接口调用成功率',d:'-0.3pt'} ],
+    usage:[ {n:'客情 AI Agent',v:92}, {n:'短视频 AI Agent',v:81}, {n:'运营 AI Agent',v:74}, {n:'招聘 AI Agent',v:53}, {n:'转让引流 AI',v:31} ],
+    stores:[ {n:'伊人美学·静安店',s:96,c:'健康'},{n:'伊人美学·徐汇店',s:88,c:'健康'},{n:'悦己美甲·浦东店',s:74,c:'关注'},{n:'纤姿美体·杭州店',s:52,c:'预警'},{n:'艾薇儿·南京西路',s:41,c:'预警'} ],
+    trend:[62,68,71,66,78,84,92,88,95,101,110,118]
+  }
+};
+
+</script>
+<script>
+/* ui.js */
+/* ===== UI 工具函数 ===== */
+const UI = {
+  esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); },
+
+  toast(msg, ms=1800){
+    const layer = document.getElementById('toastLayer');
+    const el = document.createElement('div');
+    el.className='toast'; el.textContent=msg; layer.appendChild(el);
+    setTimeout(()=>{ el.style.transition='.25s'; el.style.opacity='0'; setTimeout(()=>el.remove(),260); }, ms);
+  },
+
+  /* 底部弹窗 */
+  sheet(title, html){
+    const layer = document.getElementById('sheetLayer');
+    layer.innerHTML = `<div class="sheet-mask" onclick="UI.closeSheet()"></div>
+      <div class="sheet"><div class="sheet-h"><div class="sheet-t">${title}</div><div class="sheet-x" onclick="UI.closeSheet()">×</div></div>${html}</div>`;
+    layer.classList.add('on');
+  },
+  closeSheet(){ document.getElementById('sheetLayer').classList.remove('on'); },
+
+  /* AI 生成动效：在容器内先显示思考中，延时后输出 */
+  gen(containerId, htmlFn, ms=1100){
+    const box = document.getElementById(containerId);
+    if(!box) return;
+    box.innerHTML = `<div class="ai-out"><div class="ai-h"><span class="spark">✦</span>AI 生成中<div class="dots"><i></i><i></i><i></i></div></div>
+      <div class="skeleton" style="width:82%"></div><div class="skeleton" style="width:94%"></div>
+      <div class="skeleton" style="width:70%"></div><div class="skeleton" style="width:88%"></div></div>`;
+    setTimeout(()=>{ box.innerHTML = htmlFn(); if(box.scrollIntoView) box.scrollIntoView({behavior:'smooth',block:'nearest'}); }, ms);
+  },
+
+  tag(text, cls=''){ return `<span class="tag ${cls}">${text}</span>`; },
+
+  stat(n,l,d){ return `<div class="stat"><div class="n">${n}</div><div class="l">${l}</div>${d?`<div class="d ${d.startsWith('+')?'up':'down'}">${d}</div>`:''}</div>`; },
+
+  /* 订阅锁定态包裹 */
+  lock(innerHtml, tip, fr){
+    return `<div class="card locked">${innerHtml}
+      <div class="lock-mask"><div class="lk-ico">🔒</div><div class="lk-t">订阅增值功能</div>
+      <div class="lk-s">${tip}</div><button class="btn btn-gold sm" onclick="UI.subDialog('${fr}')">开通订阅</button></div></div>`;
+  },
+
+  subDialog(fr){
+    UI.sheet('开通订阅增值包', `
+      <div class="alert info"><span class="a-ico">ⓘ</span><div>${fr} 属于<b>订阅增值功能</b>，需按期付费开通。基础版（一次性购买）不含此项。</div></div>
+      <div class="card tight" style="box-shadow:none;border:1px solid var(--line);margin-bottom:10px">
+        <div class="row between"><b>单 Agent 订阅</b><span style="color:var(--gold);font-weight:700">¥199 / 月</span></div>
+        <div class="muted" style="font-size:11px;margin-top:4px">仅开通当前 Agent 的 2 项增值功能</div>
+      </div>
+      <div class="card tight" style="box-shadow:none;border:1px solid var(--gold);margin-bottom:12px">
+        <div class="row between"><b>五大 Agent 打包 <span class="tag sub">推荐</span></b><span style="color:var(--gold);font-weight:700">¥699 / 月</span></div>
+        <div class="muted" style="font-size:11px;margin-top:4px">含全部 10 项增值功能，节省 ¥296</div>
+      </div>
+      <button class="btn btn-gold btn-block" onclick="UI.closeSheet();App.subscribe()">确认开通（演示）</button>
+      <div class="muted" style="font-size:10.5px;text-align:center;margin-top:8px">定价与配额为演示值，实际以商业化方案为准（待确认）</div>`);
+  },
+
+  /* 权限限制提示 */
+  deny(msg){ UI.toast(msg || '当前角色无此权限（演示）'); },
+
+  empty(ico,t,s,btn){ return `<div class="empty"><div class="e-ico">${ico}</div><div class="e-t">${t}</div><div class="e-s">${s}</div>${btn||''}</div>`; },
+
+  funnel(rows){
+    const max = Math.max(...rows.map(r=>r.v));
+    return `<div class="funnel">${rows.map(r=>`
+      <div class="fun-row"><div class="fun-t"><span>${r.l}</span><span><b>${r.v.toLocaleString()}</b> ${r.r?`<span class="muted">· ${r.r}</span>`:''}</span></div>
+      <div class="fun-bar"><i style="width:${Math.max(8, r.v/max*100)}%">${r.p||''}</i></div></div>`).join('')}</div>`;
+  },
+
+  bars(rows, unit){
+    const max = Math.max(...rows.map(r=>r.v));
+    return `<div class="bars">${rows.map(r=>`<div class="bar-row"><span class="bl">${r.n}</span>
+      <span class="bt"><i style="width:${Math.max(4,r.v/max*100)}%"></i></span>
+      <span class="bv">${r.v}${unit||''}</span></div>`).join('')}</div>`;
+  }
+};
+
+</script>
+<script>
+/* pages-agent.js */
+/* ===== 五大 Agent 页面 ===== */
+const Pages = {};
+const T = UI.tag;
+
+/* ---------- 通用：Agent 功能入口卡 ---------- */
+function fnCard(fr, title, level, desc, route, extra){
+  const isSub = level === '订阅';
+  const locked = isSub && !App.state.subscribed;
+  return `<div class="list-item" style="padding:12px 0">
+    <div class="fi">
+      <div class="t">${title} ${T(fr,'fr')} ${T(isSub?'订阅':'基础', isSub?'sub':'base')}</div>
+      <div class="s wrap" style="margin-top:5px">${desc}</div>
+    </div>
+    <button class="btn sm ${isSub?(locked?'btn-gold':'btn-outline'):'btn-primary'}" onclick="App.go('${route}')">${locked?'开通':'进入'}</button>
+  </div>`;
+}
+
+/* =======================================================
+   模块一：招聘 AI Agent
+======================================================= */
+Pages['hr'] = () => ({
+  title:'招聘 AI Agent', tab:'home', fr:'FR-1-1 ~ FR-1-5',
+  desc:'把「岗位发布 → 简历回流 → AI 筛选 → 面试 → 核验」全链路压缩为 AI 自动执行。',
+  tips:['查看 3 个在招岗位与候选人分布','进入 FR-1-1 生成多版本 JD','进入 FR-1-3 查看 A/B/C 分层依据'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📋</span>在招岗位</div><div class="card-more">+ 新建</div></div>
+      ${DB.jobs.map(j=>`<div class="list-item">
+        <div class="fi"><div class="t">${j.t}</div><div class="s">${j.city} · ${j.pay} · 已生成 ${j.ver} 个版本</div></div>
+        ${T(j.status,'info')}<span class="tag">${j.n} 份</span></div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">👥</span>候选人概览</div><div class="card-more" onclick="App.go('hr/screen')">全部 →</div></div>
+      <div class="stat-grid" style="margin-bottom:6px">
+        ${UI.stat(71,'简历总数','+12')}${UI.stat(26,'A 级候选','+5')}${UI.stat(9,'约面待安排','')}
+      </div>
+      ${DB.candidates.slice(0,3).map(c=>`<div class="list-item">
+        <div class="avatar">${c.name[0]}</div>
+        <div class="fi"><div class="t">${c.name} ${T(c.status+' 级', c.status==='A'?'ok':(c.status==='B'?'warn':'danger'))}</div>
+        <div class="s">${c.exp} · ${c.skill.slice(0,2).join('/')} · 期望 ${c.pay}</div></div>
+        <span class="muted" style="font-size:11px">${c.time}</span></div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⚙️</span>功能点（5 项）</div></div>
+      ${fnCard('FR-1-1','自动生成JD','基础','输入岗位要素，AI 10 秒生成多版本结构化 JD，支持改写与模板保存','hr/jd')}
+      ${fnCard('FR-1-2','人才库对接','基础','第三方渠道岗位外发、简历回流、去重合并、按门店隔离','hr/talent')}
+      ${fnCard('FR-1-3','文字沟通筛选','基础','AI 以门店名义初筛问答，A/B/C 分层 + 判断依据，可人工接管','hr/screen')}
+      ${fnCard('FR-1-4','音视频沟通','订阅','在线语音/视频面试，AI 3 分钟生成结构化纪要与推荐结论','hr/video')}
+      ${fnCard('FR-1-5','背景核验','订阅','身份实名、证书真伪、从业经历核验，输出报告与风险提示','hr/verify')}
+    </div>
+  </div>`
+});
+
+/* FR-1-1 自动生成 JD */
+Pages['hr/jd'] = () => ({
+  title:'自动生成 JD', tab:'home', fr:'FR-1-1 自动生成JD [基础]',
+  desc:'输入岗位类型、门店规模、城市、薪资范围、技能要求，AI 生成符合美业语境的结构化 JD，多版本多风格。',
+  tips:['填写要素后点击「AI 生成」','切换 专业版 / 亲和版 / 抖音风','保存为门店常用模板'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t">岗位要素</div></div>
+      <div class="field"><label>岗位类型</label>
+        <div class="chips"><div class="chip on" onclick="App.chip(this)">美甲师</div><div class="chip" onclick="App.chip(this)">美睫师</div><div class="chip" onclick="App.chip(this)">皮肤管理师</div><div class="chip" onclick="App.chip(this)">纹绣师</div></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>城市 / 商圈</label><input class="input" value="上海 · 静安"></div>
+        <div class="field"><label>薪资范围</label><input class="input" value="6-10K"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>门店规模</label><select class="input"><option>8 工位 · 12 人（中型）</option><option>4 工位 · 6 人（小型）</option><option>15 工位 · 25 人（大型）</option></select></div>
+        <div class="field"><label>经验要求</label><input class="input" value="3 年以上"></div>
+      </div>
+      <div class="field"><label>技能要求</label><input class="input" value="手绘彩绘、日式延长甲、穿戴甲"></div>
+      <div class="field"><label>福利待遇</label><input class="input" value="包住宿、提成上不封顶、节日福利"></div>
+      <div class="seg" style="margin-bottom:10px"><div class="on" onclick="App.seg(this)">专业版</div><div onclick="App.seg(this)">亲和版</div><div onclick="App.seg(this)">抖音风</div></div>
+      <button class="btn btn-primary btn-block" onclick="App.genJD()">✦ AI 生成 JD（≤5s）</button>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px;line-height:1.6">合规校验：AI 将自动规避性别/年龄/地域等歧视性表述（业务规则补充）</div>
+    </div>
+    <div id="jdOut"></div>
+  </div>`
+});
+
+/* FR-1-2 人才库对接 */
+Pages['hr/talent'] = () => ({
+  title:'人才库对接', tab:'home', fr:'FR-1-2 人才库对接 [基础]',
+  desc:'第三方 API 对接招聘渠道：岗位外发、简历回流、去重合并、按门店隔离与异常重试。',
+  tips:['查看渠道授权与同步状态','点击「授权已过期」渠道查看重试','查看去重规则说明'],
+  html:`
+  <div class="page-pad">
+    ${DB.channels.filter(c=>!c.ok).length?`<div class="alert warn"><span class="a-ico">⚠</span><div>有 <b>1</b> 个渠道授权已过期，简历回流可能中断，建议重新授权。</div></div>`:''}
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🔌</span>已对接渠道</div><div class="card-more" onclick="App.go('account/integration')">管理 →</div></div>
+      ${DB.channels.map(c=>`<div class="list-item" ${c.ok?'':`onclick="UI.toast('已重新发起授权，等待渠道回调')"`}>
+        <div class="avatar" style="background:${c.ok?'#EAF1FE':'#FDF3E6'};color:${c.ok?'#3A7AFE':'#E8891C'}">渠</div>
+        <div class="fi"><div class="t">${c.n} ${T(c.s, c.ok?'ok':'warn')}</div><div class="s">最近同步 ${c.t} · 配额 ${c.q}</div></div>
+        ${c.ok?'':`<button class="btn sm btn-outline" >重新授权</button>`}</div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📥</span>简历回流（近 24h）</div></div>
+      <div class="stat-grid">
+        ${UI.stat(71,'回流简历','+12')}${UI.stat(64,'已去重入池','')}${UI.stat(7,'重复投递合并','')}${UI.stat(0,'回流失败','')}
+      </div>
+      <div class="hint muted" style="font-size:11px;margin-top:10px;line-height:1.7">
+        <b>去重规则</b>：以「手机号 + 姓名」为唯一键，重复投递自动合并并保留最新简历版本。<br>
+        <b>时效</b>：渠道推送后 5 分钟内可见（以渠道侧时效为基准）。<br>
+        <b>异常</b>：API 失败给出明确提示与重试入口，不阻断门店主流程。
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🔐</span>数据合规</div></div>
+      <div class="list-item"><div class="fi"><div class="t">个人信息明示收集目的</div><div class="s">候选人投递页已展示告知条款</div></div>${T('已开启','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">加密存储 / 最小可见权限</div><div class="s">联系方式仅管理员与授权运营可见</div></div>${T('已开启','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">数据按门店隔离</div><div class="s">门店账号仅可见本门店候选人</div></div>${T('已开启','ok')}</div>
+    </div>
+  </div>`
+});
+
+/* FR-1-3 文字沟通筛选 */
+Pages['hr/screen'] = () => ({
+  title:'文字沟通筛选', tab:'home', fr:'FR-1-3 文字沟通筛选 [基础]',
+  desc:'AI 以门店名义围绕预设问题清单自动问答，A/B/C 分层并输出判断依据，支持人工接管与修正。',
+  tips:['点击候选人查看完整 AI 对话','查看 AI 分层依据','一键转人工接管 / 修正分层'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">💬</span>AI 初筛队列</div><div class="card-more">问题清单设置</div></div>
+      <div class="chips" style="margin-bottom:10px">
+        <div class="chip on" onclick="App.chip(this)">全部 ${DB.candidates.length}</div>
+        <div class="chip" onclick="App.chip(this)">A 级 2</div><div class="chip" onclick="App.chip(this)">B 级 1</div><div class="chip" onclick="App.chip(this)">C 级 1</div>
+      </div>
+      ${DB.candidates.map(c=>`<div class="list-item" onclick="App.candDetail(${c.id})">
+        <div class="avatar ${c.status==='A'?'':''}">${c.name[0]}</div>
+        <div class="fi"><div class="t">${c.name} ${T(c.status+' 级', c.status==='A'?'ok':(c.status==='B'?'warn':'danger'))} ${T(c.src)}</div>
+        <div class="s wrap">${c.exp} · ${c.skill.join('/')} · 期望 ${c.pay} · ${c.where} · ${c.arrive}到岗</div></div>
+        <span class="muted" style="font-size:16px">›</span></div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📝</span>AI 提问清单</div></div>
+      ${['相关经验年限与专精项目','核心技能熟练度（手绘/延长/嫁接）','最快到岗时间','薪资接受度与构成','可接受的班次与作息'].map((q,i)=>
+        `<div class="list-item"><div class="avatar" style="width:24px;height:24px;flex:0 0 24px;font-size:11px">${i+1}</div><div class="fi"><div class="t" style="font-size:13px">${q}</div></div>${T('必问','')}</div>`).join('')}
+      <div class="alert info" style="margin-top:10px"><span class="a-ico">ⓘ</span><div>薪资、编制等关键承诺 <b>不由 AI 擅自生成</b>，必须命中门店已确认的 JD 字段。</div></div>
+    </div>
+  </div>`
+});
+
+/* FR-1-4 音视频沟通（订阅） */
+Pages['hr/video'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">🎥</span>音视频面试</div>${T('FR-1-4','fr')}</div>
+    <div class="list-item"><div class="avatar">林</div><div class="fi"><div class="t">林小满 · 美甲师</div><div class="s">可约：今天 15:00 / 明天 10:00</div></div>
+      <button class="btn sm btn-primary" onclick="UI.toast('预约链接已发送（演示）')">发起</button></div>
+    <div class="list-item"><div class="avatar">陈</div><div class="fi"><div class="t">陈思思 · 美甲师</div><div class="s">可约：今天 19:30</div></div>
+      <button class="btn sm btn-primary" onclick="UI.toast('预约链接已发送（演示）')">发起</button></div>
+    <div style="margin-top:10px"><button class="btn btn-outline btn-block" onclick="App.genVideoNotes()">查看 AI 面试纪要示例</button></div>
+    <div id="videoOut"></div>`;
+  return {
+    title:'音视频沟通', tab:'home', fr:'FR-1-4 音视频沟通 [订阅]',
+    desc:'在线语音/视频面试：预约 → 实时对话 → AI 结构化纪要（技能自评、作品讲解、到岗时间、风险点）→ 推荐结论。',
+    tips:['发起视频面试预约','生成 3 分钟内 AI 纪要','关闭左侧订阅开关查看引导态'],
+    html:`<div class="page-pad">
+      ${locked
+        ? `<div class="sub-bar"><span>🔒</span><div class="sb-t">订阅失效后<b>历史纪要仍可查看</b>，但不可发起新面试。</div></div>
+           ${UI.lock(inner, '发起音视频面试需订阅本 Agent 增值包', 'FR-1-4')}`
+        : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">☎️</span>服务依赖</div></div>
+        <div class="list-item"><div class="fi"><div class="t">第三方音视频服务（RTC）</div><div class="s">服务商待确认 · 支持中断重连</div></div>${T('已授权','ok')}</div>
+        <div class="hint muted" style="font-size:11px;line-height:1.7">录制需候选人知情同意并留存授权凭证；主流机型可通话。</div>
+      </div>
+    </div>`
+  };
+};
+
+/* FR-1-5 背景核验（订阅） */
+Pages['hr/verify'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">🛡️</span>背景核验项</div>${T('FR-1-5','fr')}</div>
+    ${['身份实名核验 — 公安二要素','从业资格证书真伪 — 美业技能等级证','既往任职单位核验 — 社保/离职证明'].map((x,i)=>
+      `<label class="list-item" style="cursor:pointer"><input type="checkbox" checked style="width:16px;height:16px;accent-color:#D4708B">
+       <div class="fi"><div class="t" style="font-size:13px">${x}</div></div><span class="muted" style="font-size:11px">${['¥8 / 次','¥15 / 次','¥20 / 次'][i]}</span></label>`).join('')}
+    <button class="btn btn-primary btn-block" style="margin-top:10px" onclick="App.genVerify()">发起核验（需候选人授权）</button>
+    <div id="verifyOut"></div>`;
+  return {
+    title:'背景核验', tab:'home', fr:'FR-1-5 背景核验 [订阅]',
+    desc:'对接第三方核验能力，输出身份真实性、从业资质、从业经历结论与风险提示，作为入职审批依据。',
+    tips:['勾选核验项并发起核验','查看核验报告（含「无法核验」处理）','未授权时不允许发起'],
+    html:`<div class="page-pad">
+      <div class="alert warn"><span class="a-ico">⚠</span><div>须获候选人<b>授权</b>并留存授权凭证（授权书 + 时间戳），未授权不允许发起核验。</div></div>
+      ${locked ? UI.lock(inner, '背景核验按次计费，额度与套餐绑定（待确认）', 'FR-1-5') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">📑</span>核验记录</div></div>
+        <div class="list-item"><div class="fi"><div class="t">周颖 · 2026-10-28</div><div class="s">证书核验通过 / 任职经历 1 项无法核验</div></div>${T('有风险','warn')}</div>
+        <div class="hint muted" style="font-size:11px;line-height:1.7">无数据须明确返回「无法核验」而非猜测；结果仅用于招聘决策并留存操作记录；按管理员/运营分级可见。</div>
+      </div>
+    </div>`
+  };
+};
+
+/* =======================================================
+   模块二：转让引流 AI
+======================================================= */
+Pages['flow'] = () => ({
+  title:'转让引流 AI', tab:'home', fr:'FR-2-1 ~ FR-2-5',
+  desc:'一手解决转让信息无人知，一手解决新店缺客流：素材生产 → 流量分发 → 咨询承接闭环。',
+  tips:['生成三套不同风格的转让素材','查看多渠道发布状态与失败原因','体验 AI 承接文字咨询'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🏪</span>转让信息</div><div class="card-more">编辑</div></div>
+      <div class="fi"><div class="t" style="font-size:14px">静安曹家渡 · 美容美体店整体转让</div>
+      <div class="s wrap" style="margin-top:6px;line-height:1.8">128㎡ · 8 工位 + 2 房间 · 租期剩余 3 年<br>转让费 28 万 · 月营业额 9-12 万 · 老客 300+<br>店主因家庭迁移外地，设备与存货全留</div></div>
+      <div class="stat-grid" style="margin-top:12px">${UI.stat('4,386','累计曝光','+320')}${UI.stat(23,'咨询线索','+6')}${UI.stat(7,'留资','')}${UI.stat(3,'到店看店','')}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⚙️</span>功能点（5 项）</div></div>
+      ${fnCard('FR-2-1','自动生成素材','基础','转让/引流要素一键生成文案、海报文案、平台标题与话术，多版本可复用','flow/material')}
+      ${fnCard('FR-2-2','流量池对接','基础','一次录入多渠道曝光，自动适配格式并回传曝光与线索','flow/publish')}
+      ${fnCard('FR-2-3','文字咨询','基础','AI 承接咨询、策略性报价、留资，敏感问题拒答并转人工','flow/consult')}
+      ${fnCard('FR-2-4','多渠道整合','订阅','跨渠道线索归一合并，统一工作台与统一回复','flow/workbench')}
+      ${fnCard('FR-2-5','流量分析','订阅','曝光→点击→咨询→留资→到店全链路归因与素材优劣结论','flow/analysis')}
+    </div>
+  </div>`
+});
+
+Pages['flow/material'] = () => ({
+  title:'自动生成素材', tab:'home', fr:'FR-2-1 自动生成素材 [基础]',
+  desc:'输入转让要素或引流卖点，AI 批量生成转让文案、海报图文案、平台适配标题与话术。',
+  tips:['点击「AI 批量生成」查看三套素材','展开查看具体文案内容','注意关键数据与录入一致性校验'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t">要素录入</div><div class="card-more">复用上次</div></div>
+      <div class="grid2">
+        <div class="field"><label>城市 / 地段</label><input class="input" value="上海 · 静安曹家渡"></div>
+        <div class="field"><label>面积 / 工位</label><input class="input" value="128㎡ / 8工位+2房"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>转让费</label><input class="input" value="28 万（可小刀）"></div>
+        <div class="field"><label>剩余租期</label><input class="input" value="3 年"></div>
+      </div>
+      <div class="field"><label>设备与存货清单</label><textarea class="textarea">进口光疗仪 2 台、皮肤管理仪 1 台、甲油胶库存 600+ 支、一次性耗材若干</textarea></div>
+      <div class="grid2">
+        <div class="field"><label>客群</label><input class="input" value="社区成熟商圈 · 25-45 岁女性为主"></div>
+        <div class="field"><label>月营业额区间</label><input class="input" value="9-12 万"></div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="App.genMaterial()">✦ AI 批量生成（≥3 类版本）</button>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px;line-height:1.6">校验：违禁词/极限词（「最便宜」「稳赚」）自动拦截；经营数据标注「以门店提供信息为准」。</div>
+    </div>
+    <div id="matOut"></div>
+  </div>`
+});
+
+Pages['flow/publish'] = () => ({
+  title:'流量池对接', tab:'home', fr:'FR-2-2 流量池对接 [基础]',
+  desc:'一次录入多渠道发布，自动适配标题、正文、图片尺寸与话题，逐渠道回传状态与线索。',
+  tips:['查看逐渠道发布状态','点击失败渠道体验「一键修复重发」','查看发布前合规拦截'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📡</span>渠道发布状态</div><div class="card-more">全部重发</div></div>
+      ${DB.flowChannels.map(c=>`<div class="list-item" ${c.ok&&!c.wait?'':`onclick="App.fixPublish('${c.n}')"`}>
+        <div class="avatar" style="background:${c.ok?(c.wait?'#FDF3E6':'#E8F7F0'):'#FDECEC'};color:${c.ok?(c.wait?'#E8891C':'#23A06B'):'#E5484D'}">${c.ok?(c.wait?'审':'✓'):'!'}</div>
+        <div class="fi"><div class="t">${c.n} ${T(c.st, c.ok?(c.wait?'warn':'ok'):'danger')}</div><div class="s">${c.r}</div></div>
+        ${c.ok?'':`<button class="btn sm btn-primary">修复重发</button>`}</div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🧩</span>格式自动适配</div></div>
+      <div class="list-item"><div class="fi"><div class="t">标题长度</div><div class="s">58 同城 ≤ 30 字 / 小红书 ≤ 20 字 / 抖音 ≤ 55 字</div></div>${T('已适配','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">主图尺寸</div><div class="s">按渠道要求裁切 3:4 / 1:1 / 16:9</div></div>${T('已适配','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">话题与标签</div><div class="s">按渠道热词库自动挂载</div></div>${T('已适配','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">发布前合规拦截</div><div class="s">极限词、虚假承诺拦截并给出修改建议</div></div>${T('已拦截 2 次','warn')}</div>
+    </div>
+  </div>`
+});
+
+Pages['flow/consult'] = () => ({
+  title:'文字咨询', tab:'home', fr:'FR-2-3 文字咨询 [基础]',
+  desc:'AI 承接咨询并围绕门店预设知识应答，识别高意向线索并留资；敏感问题拒答、超纲转人工。',
+  tips:['查看 AI 与咨询者的真实对话','观察价格类问题的策略性话术','点击「转人工」体验 AI 静默'],
+  html:`
+  <div class="page-pad">
+    <div class="card tight">
+      <div class="row between"><div><b>张先生</b> <span class="muted" style="font-size:11px">来源：58同城 · 09:41</span></div>${T('高意向','danger')}</div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="chat">
+        <div class="msg ai"><div class="who"><div class="avatar round">客</div></div><div class="bubble">你好，看到曹家渡的转让信息，转让费 28 万包含哪些设备？</div></div>
+        <div class="msg me"><div class="who"><div class="avatar round" style="background:var(--brand);color:#fff">AI</div></div><div class="bubble">您好～转让费含：进口光疗仪 2 台、皮肤管理仪 1 台、甲油胶库存 600+ 支及全部一次性耗材，员工可留任。</div></div>
+        <div class="msg ai"><div class="who"><div class="avatar round">客</div></div><div class="bubble">能少多少？租期到什么时候？</div></div>
+        <div class="msg me"><div class="who"><div class="avatar round" style="background:var(--brand);color:#fff">AI</div></div><div class="bubble">价格方面可到店详谈，店主期望在 25-28 万区间，诚心可谈。租期剩余 3 年，租金 2.3 万/月。方便留个联系方式，我安排您这两天看店？</div></div>
+        <div class="msg ai"><div class="who"><div class="avatar round">客</div></div><div class="bubble">138****0091，周六下午有空。</div></div>
+        <div class="msg me"><div class="who"><div class="avatar round" style="background:var(--brand);color:#fff">AI</div></div><div class="bubble">已记录！周六下午 14:00 为您安排实地看店，稍后发送门店定位。🎯 已标记为高意向线索并通知店长。</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🚫</span>不可披露清单（门店设定）</div></div>
+      ${['顾客名单与会员档案','精确财务报表与成本明细','员工薪资与劳动合同','房东联系方式与租约原件'].map(x=>
+        `<div class="list-item"><div class="fi"><div class="t" style="font-size:13px">${x}</div></div>${T('已屏蔽','danger')}</div>`).join('')}
+      <div class="alert info" style="margin:10px 0 0"><span class="a-ico">ⓘ</span><div>AI <b>不得编造门店未提供的数据</b>；超纲追问自动转人工并通知店长；人工接管后 AI 静默。</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🎯</span>线索列表</div><div class="card-more" onclick="App.go('flow/workbench')">工作台 →</div></div>
+      ${DB.leads.map(l=>`<div class="list-item"><div class="avatar">${l.n[0]}</div>
+        <div class="fi"><div class="t">${l.n} ${T(l.lv+'意向', l.lv==='高'?'danger':(l.lv==='中'?'warn':''))}</div>
+        <div class="s">${l.src} · ${l.t} · ${l.q}</div></div></div>`).join('')}
+    </div>
+    <div style="padding:0 12px"><button class="btn btn-outline btn-block" onclick="UI.toast('已转交人工，AI 已静默（演示）')">转人工接管</button></div>
+  </div>`
+});
+
+Pages['flow/workbench'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">🧭</span>统一线索池</div>${T('FR-2-4','fr')}</div>
+    ${[['张先生','138****0091',['58同城','抖音'],'查看过素材 A · 问过价格'],['李女士','186****7745',['小红书','58同城'],'问过租期 · 预约看店']].map(l=>
+      `<div class="list-item"><div class="avatar">${l[0][0]}</div>
+       <div class="fi"><div class="t">${l[0]} ${l[2].map(x=>T(x)).join(' ')}</div><div class="s wrap">${l[1]} · ${l[3]}</div></div>
+       <button class="btn sm btn-outline" onclick="UI.toast('已打开统一回复（演示）')">回复</button></div>`).join('')}
+    <div class="hint muted" style="font-size:11px;margin-top:8px;line-height:1.7">合并主键：手机号（可选微信 ID）；跨渠道来源标签保留。</div>`;
+  return {
+    title:'多渠道整合', tab:'home', fr:'FR-2-4 多渠道整合 [订阅]',
+    desc:'把多渠道的发布、咨询、线索统一到一个工作台，跨渠道归并管理。',
+    tips:['查看跨渠道合并后的线索','对比渠道线索质量','关闭订阅查看单渠道视图'],
+    html:`<div class="page-pad">
+      ${locked ? UI.lock(inner,'未订阅仅支持单渠道视图','FR-2-4') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">📊</span>渠道线索质量对比</div></div>
+        ${UI.bars([{n:'小红书',v:14},{n:'58同城',v:9},{n:'抖音',v:6},{n:'朋友圈',v:3}], ' 条')}
+      </div>
+    </div>`
+  };
+};
+
+Pages['flow/analysis'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">📉</span>转化漏斗（近 7 天）</div>${T('FR-2-5','fr')}</div>
+    ${UI.funnel([{l:'曝光',v:4386},{l:'点击',v:612,p:'14.0%'},{l:'咨询',v:145,p:'23.7%'},{l:'留资',v:23,p:'15.9%'},{l:'到店看店',v:3,p:'13.0%'}])}
+    <div class="alert warn" style="margin-top:10px"><span class="a-ico">💡</span><div><b>AI 结论</b>：素材 B（朋友圈故事版）点击率 4.2% 高于均值 1.8 倍，但留资率仅 6%——建议首图换成门店实景 + 增加「预约看店」钩子；素材 C 高点击低留资，建议调整人群定向至 30-45 岁女性。</div></div>
+    <button class="btn btn-outline btn-block" onclick="UI.toast('已导出明细（演示）')">导出明细</button>`;
+  return {
+    title:'流量分析', tab:'home', fr:'FR-2-5 流量分析 [订阅]',
+    desc:'曝光→点击→咨询→留资→到店/成交全链路统计与归因，输出素材与渠道优劣结论。',
+    tips:['查看漏斗各环节可下钻','查看 AI 归因建议','关闭订阅查看置灰引导态'],
+    html:`<div class="page-pad">
+      ${locked ? UI.lock(inner,'开通后可查看全链路归因与导出','FR-2-5') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">🆚</span>素材对比</div></div>
+        <table class="tbl"><tr><th>素材</th><th>曝光</th><th>点击率</th><th>留资</th></tr>
+        <tr><td>A 商转版</td><td>1,820</td><td>2.3%</td><td>9</td></tr>
+        <tr><td>B 故事版</td><td>1,506</td><td>4.2%</td><td>6</td></tr>
+        <tr><td>C 短视频</td><td>1,060</td><td>3.8%</td><td>8</td></tr></table>
+        <div class="hint muted" style="font-size:10.5px;margin-top:8px">指标口径与统计周期见看板说明；数据延迟 T+1（待确认）。</div>
+      </div>
+    </div>`
+  };
+};
+
+/* =======================================================
+   模块三：运营 AI Agent
+======================================================= */
+Pages['ops'] = () => ({
+  title:'运营 AI Agent', tab:'home', fr:'FR-3-1 ~ FR-3-5',
+  desc:'把门店最耗人力的三件事——做方案、管耗材、写文案——交给 AI。',
+  tips:['生成 21 天复购提升方案','查看低于安全库存清单','一键同步多端文案'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📌</span>本月经营快照</div><div class="card-more" onclick="App.go('board')">看板 →</div></div>
+      <div class="stat-grid">${UI.stat('18.6万','本月业绩','-8万缺口')}${UI.stat('32%','复购率','+4pt')}${UI.stat('386','客单价','+12')}</div>
+      <div class="alert warn" style="margin:10px 0 0"><span class="a-ico">⚠</span><div>有 <b>2 项耗材</b> 低于安全库存，建议先补货再执行活动方案。</div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⚙️</span>功能点（5 项）</div></div>
+      ${fnCard('FR-3-1','方案生成','基础','输入目标/预算/主推项目，生成含排期物料预算的完整可执行方案','ops/plan')}
+      ${fnCard('FR-3-2','耗材管理','基础','出入库盘点、低库存预警、按项目耗用标准自动扣减','ops/stock')}
+      ${fnCard('FR-3-3','文案更新','基础','多端文案批量改写、时效化更新、版本管理与回滚','ops/copy')}
+      ${fnCard('FR-3-4','推广优化','订阅','基于投放数据给出优化建议，授权后自动调整并留痕','ops/promo')}
+      ${fnCard('FR-3-5','运营数据分析','订阅','经营与运营数据汇总分析，周/月报自动输出与导出','ops/analysis')}
+    </div>
+  </div>`
+});
+
+Pages['ops/plan'] = () => ({
+  title:'方案生成', tab:'home', fr:'FR-3-1 方案生成 [基础]',
+  desc:'输入门店类型、目标、预算、时间段、主推项目，生成含主题、人群、机制、套餐、话术、排期、物料、预算、风险预案的完整方案。',
+  tips:['点击生成三选一方案','查看执行清单与物料预算','一键生成配套文案'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t">目标设定</div></div>
+      <div class="field"><label>经营目标</label>
+        <div class="chips"><div class="chip on" onclick="App.chip(this)">复购提升</div><div class="chip" onclick="App.chip(this)">拉新</div><div class="chip" onclick="App.chip(this)">升单</div><div class="chip" onclick="App.chip(this)">清库存</div></div></div>
+      <div class="grid2"><div class="field"><label>预算</label><input class="input" value="1.5 万"></div>
+      <div class="field"><label>周期</label><input class="input" value="21 天"></div></div>
+      <div class="field"><label>主推项目</label><input class="input" value="水光补水 + 深层清洁套餐"></div>
+      <div class="field"><label>业绩缺口</label><input class="input" value="8 万"></div>
+      <button class="btn btn-primary btn-block" onclick="App.genPlan()">✦ 生成方案（三选一）</button>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px;line-height:1.6">促销价不得低于门店设定的毛利底线 / 折扣下限（业务规则补充）。</div>
+    </div>
+    <div id="planOut"></div>
+  </div>`
+});
+
+Pages['ops/stock'] = () => ({
+  title:'耗材管理', tab:'home', fr:'FR-3-2 耗材管理 [基础]',
+  desc:'美业耗材台账：入库、出库、盘点、低库存预警、按项目耗用标准自动扣减。',
+  tips:['查看低于安全库存清单','一键生成补货单','查看月底盘点损耗差异'],
+  html:`
+  <div class="page-pad">
+    <div class="alert danger"><span class="a-ico">⚠</span><div><b>2 项低于安全库存</b>，1 项临近效期，建议今日补货。</div></div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📦</span>库存台账</div><div class="card-more">+ 入库</div></div>
+      ${DB.materialsStock.map(m=>`<div class="list-item">
+        <div class="avatar" style="background:${m.st==='充足'?'#E8F7F0':(m.st==='临近效期'?'#FDF3E6':'#FDECEC')};color:${m.st==='充足'?'#23A06B':(m.st==='临近效期'?'#E8891C':'#E5484D')}">${m.n[0]}</div>
+        <div class="fi"><div class="t">${m.n} ${T(m.st, m.st==='充足'?'ok':(m.st==='临近效期'?'warn':'danger'))}</div>
+        <div class="s">现存 ${m.stock}${m.u} · 安全线 ${m.safe}${m.u} · 耗用 ${m.use}</div>
+        <div class="prog" style="margin-top:6px"><i style="width:${Math.min(100,m.stock/m.safe*50)}%;background:${m.stock<m.safe?'#E5484D':'#23A06B'}"></i></div></div>
+        </div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🔄</span>自动扣减演示</div></div>
+      <div class="list-item"><div class="fi"><div class="t">「全手甲」完成 1 单</div><div class="s">底胶 0.3g + 色胶 0.5g 自动扣减（项目耗用标准）</div></div>${T('已扣减','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">「水光补水」完成 1 单</div><div class="s">院线精华 1 盒自动扣减</div></div>${T('已扣减','ok')}</div>
+      <div class="hint muted" style="font-size:11px;line-height:1.7">出入库流水可追溯到人、时间、单据；生成运营方案时自动校验所需耗材，不足则提示采购量。</div>
+      <button class="btn btn-primary btn-block" style="margin-top:10px" onclick="App.genPurchase()">✦ 一键生成补货单</button>
+      <div id="purchaseOut"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🧾</span>月度盘点（10 月）</div></div>
+      <table class="tbl"><tr><th>项目</th><th>理论</th><th>实际</th><th>差异</th></tr>
+      <tr><td>甲油胶</td><td>212</td><td>186</td><td style="color:var(--danger)">-26</td></tr>
+      <tr><td>院线精华</td><td>9</td><td>6</td><td style="color:var(--danger)">-3</td></tr>
+      <tr><td>一次性床单</td><td>33</td><td>31</td><td style="color:var(--danger)">-2</td></tr></table>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px">损耗差异已纳入运营分析，损耗率 4.2%（环比 -0.8pt）。</div>
+    </div>
+  </div>`
+});
+
+Pages['ops/copy'] = () => ({
+  title:'文案更新', tab:'home', fr:'FR-3-3 文案更新 [基础]',
+  desc:'对外内容（小程序项目页、朋友圈/社群话术、海报文案、点评平台）AI 批量改写与版本管理。',
+  tips:['选择更新目标后一键同步','查看改写 diff 对比','体验版本回滚'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t">变更源</div></div>
+      <div class="field"><label>变更内容</label><input class="input" value="睫毛嫁接 · 换季调价：自然款 ¥298 → ¥268"></div>
+      <div class="field"><label>新卖点</label><input class="input" value="进口蚕丝蛋白毛 · 零负重 · 维持 30 天"></div>
+      <div class="field"><label>同步目标</label>
+        <div class="chips">${DB.copyTargets.map((c,i)=>`<div class="chip ${i<3?'on':''}" onclick="App.chip(this,'multi')">${c.n}</div>`).join('')}</div></div>
+      <button class="btn btn-primary btn-block" onclick="App.genCopy()">✦ 一键同步多端文案</button>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px;line-height:1.6">价格、地址、营业时间等硬字段以门店主数据为唯一源，AI 不得改动数值。</div>
+    </div>
+    <div id="copyOut"></div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🕓</span>版本历史</div></div>
+      <div class="list-item"><div class="fi"><div class="t">v3 · 2026-11-02 换季调价</div><div class="s">当前生效 · 覆盖 4 个端口</div></div><button class="btn sm btn-outline" onclick="UI.toast('已回滚至 v2，已发布记录保留（演示）')">回滚</button></div>
+      <div class="list-item"><div class="fi"><div class="t">v2 · 2026-09-15 秋季上新</div><div class="s">历史版本</div></div>${T('已归档','')}</div>
+      <div class="list-item"><div class="fi"><div class="t">v1 · 2026-06-01 首次上架</div><div class="s">历史版本</div></div>${T('已归档','')}</div>
+    </div>
+  </div>`
+});
+
+Pages['ops/promo'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">📈</span>投放诊断</div>${T('FR-3-4','fr')}</div>
+    <div class="stat-grid" style="margin-bottom:10px">${UI.stat('¥3,000','已投放','')}${UI.stat('1.6','ROI','偏低')}${UI.stat('42','到店转化','')}</div>
+    <div class="alert info"><span class="a-ico">💡</span><div><b>AI 建议</b>：<br>① 「25-30 岁女性 + 晚间 19-22 点 + 素材 B」组合转化最高（CVR 6.8%，高于均值 2.3 倍），建议预算向该组合倾斜 60%；<br>② 计划 C（35-45 岁 / 午间）ROI 仅 0.7，建议暂停；<br>③ 素材 A 曝光高点击低，建议替换为「前后对比」首图。</div></div>
+    <div class="row" style="gap:8px">
+      <button class="btn btn-primary" style="flex:1" onclick="App.authorize()">授权后自动调整</button>
+      <button class="btn btn-outline" style="flex:1" onclick="UI.toast('已保存为待执行建议（演示）')">仅记录建议</button>
+    </div>
+    <div id="promoOut"></div>`;
+  return {
+    title:'推广优化', tab:'home', fr:'FR-3-4 推广优化 [订阅]',
+    desc:'基于历史投放与转化数据给出优化建议（人群、预算分配、素材替换、时段），授权后自动调整。',
+    tips:['查看 AI 优化建议与数据依据','点击「授权后自动调整」','未授权时仅建议不执行'],
+    html:`<div class="page-pad">
+      ${locked ? UI.lock(inner,'自动调整须门店显式授权','FR-3-4') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">🛡️</span>风控设置</div></div>
+        <div class="list-item"><div class="fi"><div class="t">单次预算上限</div><div class="s">¥5,000 / 计划</div></div>${T('已设置','ok')}</div>
+        <div class="list-item"><div class="fi"><div class="t">止损阈值</div><div class="s">ROI 连续 3 日 &lt; 1.0 自动暂停</div></div>${T('已设置','ok')}</div>
+        <div class="list-item"><div class="fi"><div class="t">调整留痕与前后效果对比</div><div class="s">每次调整可追溯采纳人与时间</div></div>${T('已开启','ok')}</div>
+      </div>
+    </div>`
+  };
+};
+
+Pages['ops/analysis'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">📊</span>本周经营报告（11.02-11.08）</div>${T('FR-3-5','fr')}</div>
+    <div class="stat-grid" style="margin-bottom:10px">${UI.stat(186,'到店量','+12')}${UI.stat('32%','复购率','+4pt')}${UI.stat('¥386','客单价','+¥12')}</div>
+    <div class="ai-out"><div class="ai-h"><span class="spark">✦</span>AI 周总结（可直接念）</div><div class="ai-body">
+本周到店 186 人次，环比 +6.9%，主要来自「水光补水」套餐活动带动；复购率 32%，较上周提升 4 个百分点。
+客单价 ¥386，同比 +3.2%。滞销项目为「手部 SPA」（近 30 天仅 4 单，库存占比 18%）。
+技师产出 TOP1 为林技师（42 单 / 业绩 1.9 万）。
+<span class="h">三条下周动作建议：</span>
+1. 对手部 SPA 做「加购 39 元」清库存组合，预计释放库存 ¥2,400；
+2. 复购提醒针对 30 天前到店未再约的 68 位顾客，按话术模板定向触达；
+3. 将林技师的排班向周末倾斜（周末单量占比 46%）。</div></div>
+    <button class="btn btn-outline btn-block" style="margin-top:10px" onclick="UI.toast('月报已导出（≤30s）（演示）')">导出月报</button>`;
+  return {
+    title:'运营数据分析', tab:'home', fr:'FR-3-5 运营数据分析 [订阅]',
+    desc:'汇总客流、复购、客单、项目结构、时段分布、活动效果、技师产出，输出结构化报告与建议。',
+    tips:['查看 AI 周总结与三条建议','导出月报','关闭订阅查看置灰引导态'],
+    html:`<div class="page-pad">
+      ${locked ? UI.lock(inner,'订阅后可查看周/月报与导出','FR-3-5') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">📐</span>指标口径（统一）</div></div>
+        <div class="list-item"><div class="fi"><div class="t">复购率</div><div class="s">近 90 天内到店 ≥2 次的顾客 / 到店顾客总数</div></div></div>
+        <div class="list-item"><div class="fi"><div class="t">客单价</div><div class="s">实收金额 / 到店人次（不含储值充值）</div></div></div>
+        <div class="hint muted" style="font-size:10.5px;line-height:1.7">缺失数据在报告中明示而非估算；分析口径全局统一并在页面说明。</div>
+      </div>
+    </div>`
+  };
+};
+
+/* =======================================================
+   模块四：客情 AI Agent
+======================================================= */
+Pages['crm'] = () => ({
+  title:'客情 AI Agent', tab:'crm', fr:'FR-4-1 ~ FR-4-5',
+  desc:'美业是强复购、强关系生意：预约、回访、答疑标准化，让顾客在「该被想起的时候」一定被想起。',
+  tips:['查看今日预约与候补队列','查看回访任务与风险识别','体验客情问答知识库'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📅</span>今日预约</div><div class="card-more" onclick="App.go('crm/appt')">排期 →</div></div>
+      ${DB.appts.slice(0,2).map(a=>`<div class="list-item">
+        <div class="avatar">${a.n[0]}</div><div class="fi"><div class="t">${a.n} · ${a.t}</div>
+        <div class="s">${a.d} · ${a.s} · ${a.lv}</div></div>${T(a.st, a.st==='已确认'?'ok':'warn')}</div>`).join('')}
+      <div class="stat-grid" style="margin-top:8px">${UI.stat(12,'今日预约','')}${UI.stat(3,'候补','')}${UI.stat('92%','到店率','+3pt')}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">💌</span>回访任务</div><div class="card-more" onclick="App.go('crm/visit')">全部 →</div></div>
+      ${DB.visits.map(v=>`<div class="list-item">
+        <div class="avatar" style="background:${v.risk?'#FDECEC':'#FCEFF2'};color:${v.risk?'#E5484D':'#D4708B'}">${v.n[0]}</div>
+        <div class="fi"><div class="t">${v.n} ${v.risk?T('不适反馈','danger'):T(v.tag,'ok')}</div>
+        <div class="s">${v.p} · ${v.t} · 「${v.r}」</div></div>${T(v.st,'ok')}</div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⚙️</span>功能点（5 项）</div></div>
+      ${fnCard('FR-4-1','智能预约','基础','按项目时长/技师/工位自动排期，含改约取消候补与到店提醒','crm/appt')}
+      ${fnCard('FR-4-2','文字回访','基础','按服务节点自动回访，AI 分层处理回复并上报人工介入项','crm/visit')}
+      ${fnCard('FR-4-3','客情问答','基础','面向顾客与员工的 AI 问答，未命中沉淀反哺知识库','crm/qa')}
+      ${fnCard('FR-4-4','语音回访','订阅','AI 语音外呼完成任务，意图识别、打标与人工转接','crm/voice')}
+      ${fnCard('FR-4-5','会员系统对接','订阅','会员档案/余额/卡券/消费记录双向同步与对账','crm/member')}
+    </div>
+  </div>`
+});
+
+Pages['crm/appt'] = () => ({
+  title:'智能预约', tab:'crm', fr:'FR-4-1 智能预约 [基础]',
+  desc:'按项目时长、技师/工位档期、房间资源与服务规则自动排期，含改约、取消、候补与到店提醒。',
+  tips:['选择项目与技师查看可约时段','体验候补队列自动通知','查看技师请假后的批量改约'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t">预约条件</div></div>
+      <div class="field"><label>项目（时长）</label>
+        <div class="chips"><div class="chip on" onclick="App.chip(this)">头皮护理 · 90min</div><div class="chip" onclick="App.chip(this)">日式美甲 · 120min</div><div class="chip" onclick="App.chip(this)">水光补水 · 60min</div></div></div>
+      <div class="field"><label>指定技师</label>
+        <div class="chips"><div class="chip on" onclick="App.chip(this)">林技师</div><div class="chip" onclick="App.chip(this)">陈技师</div><div class="chip" onclick="App.chip(this)">周技师</div><div class="chip" onclick="App.chip(this)">不限</div></div></div>
+      <button class="btn btn-primary btn-block" onclick="App.genSlots()">查询未来 7 天可约时段</button>
+    </div>
+    <div id="slotOut"></div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⏳</span>候补队列</div></div>
+      <div class="list-item"><div class="avatar">孙</div><div class="fi"><div class="t">孙女士 · 水光补水</div><div class="s">期望明天 15:00 · 当前满档，已入候补第 1 位</div></div>${T('候补中','warn')}</div>
+      <div class="alert info" style="margin-top:8px"><span class="a-ico">ⓘ</span><div>有人取消将自动通知候补顾客；技师临时请假时系统批量识别受影响预约并给出改约话术。</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⚙️</span>排期规则</div></div>
+      <div class="list-item"><div class="fi"><div class="t">资源模型</div><div class="s">技师 + 工位/房间 + 项目时长，含清洁周转 15min</div></div></div>
+      <div class="list-item"><div class="fi"><div class="t">爽约规则</div><div class="s">2 小时内取消计爽约，可配置</div></div></div>
+      <div class="list-item"><div class="fi"><div class="t">到店前提醒</div><div class="s">前一天 20:00 推送 + 当天提前 2 小时</div></div>${T('送达可记录','ok')}</div>
+    </div>
+  </div>`
+});
+
+Pages['crm/visit'] = () => ({
+  title:'文字回访', tab:'crm', fr:'FR-4-2 文字回访 [基础]',
+  desc:'按服务节点自动发起回访，话术结合顾客画像生成，回复由 AI 分层处理并上报需人工介入项。',
+  tips:['查看个性化回访话术','查看 AI 对负面反馈的处理','查看触达频次与静默时段规则'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🗓️</span>回访节点配置</div></div>
+      ${[['服务后体验回访','服务后 1-3 天','已开启'],['周期项目到期提醒','到期前 7 天','已开启'],['久未到店唤醒','90 天未到店','已开启'],['活动告知','按活动周期','已开启']].map(r=>
+        `<div class="list-item"><div class="fi"><div class="t">${r[0]}</div><div class="s">触发：${r[1]}</div></div>${T(r[2],'ok')}</div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">💬</span>AI 回访对话（刘女士）</div></div>
+      <div style="padding:2px 0">
+        <div class="msg ai"><div class="who"><div class="avatar round" style="background:var(--brand);color:#fff">AI</div></div><div class="bubble">刘女士你好～我是伊人美学的顾问小伊。昨天做的美瞳线，今天有没有刺痒或不适感？这两天尽量避免蒸汽和油类卸妆哦。</div></div>
+        <div class="msg me"><div class="who"><div class="avatar round">客</div></div><div class="bubble">有点干痒，正常吗？</div></div>
+        <div class="msg ai"><div class="who"><div class="avatar round" style="background:var(--brand);color:#fff">AI</div></div><div class="bubble">轻微干痒属于常见恢复反应，建议：① 用无菌生理盐水轻敷；② 避免揉搓与化妆 3 天；③ 如红肿加重及时联系我们。<br>🎯 已识别为不适反馈，顾问周敏将在 10 分钟内电话跟进，已记录进您的客情档案。</div></div>
+      </div>
+      <div class="alert danger" style="margin-top:10px"><span class="a-ico">⚡</span><div>检测到不适/投诉关键词 → <b>自动转人工并通知店长</b>。</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📊</span>触达效果</div></div>
+      <div class="stat-grid">${UI.stat(328,'本周触达','')}${UI.stat('41%','回复率','+6pt')}${UI.stat(27,'回访转化到店','')}</div>
+      <div class="hint muted" style="font-size:11px;margin-top:10px;line-height:1.7">
+        <b>频次上限</b>：同一顾客每日不超 1 条；<b>静默时段</b>：21:00-09:00 不打扰；顾客明确拒绝后停止同类触达；结果回流会员/客情标签。
+      </div>
+    </div>
+  </div>`
+});
+
+Pages['crm/qa'] = () => ({
+  title:'客情问答', tab:'crm', fr:'FR-4-3 客情问答 [基础]',
+  desc:'面向顾客与门店员工的 AI 问答：项目功效与流程、禁忌护理、价格套餐、门店规则、售后政策。',
+  tips:['点击问题查看 AI 回答','查看未命中问题的沉淀处理','查看低置信度兜底话术'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">❓</span>高频问题（近 7 天）</div></div>
+      ${DB.qaList.map((q,i)=>`<div class="list-item" style="cursor:pointer" onclick="App.qaDetail(${i})">
+        <div class="avatar" style="background:${q.hit?'#E8F7F0':'#FDF3E6'};color:${q.hit?'#23A06B':'#E8891C'}">${q.hit?'✓':'?'}</div>
+        <div class="fi"><div class="t">${q.q}</div><div class="s">${q.type} · 命中 ${q.hit?'知识库':'未命中 → 待补充'}</div></div>
+        <span class="muted">›</span></div>`).join('')}
+    </div>
+    <div id="qaOut"></div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📚</span>知识库</div><div class="card-more">+ 补充</div></div>
+      <div class="stat-grid">${UI.stat(268,'知识条目','')}${UI.stat('94%','命中率','')}${UI.stat(11,'待补充','')}</div>
+      <div class="hint muted" style="font-size:11px;margin-top:10px;line-height:1.7">
+        未命中问题 100% 进入「待补充」列表反哺知识库；医疗与功效表述规避违规宣称；低置信度回答附「以门店确认为准」；员工/顾客可见范围按角色区分。
+      </div>
+    </div>
+  </div>`
+});
+
+Pages['crm/voice'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">📞</span>语音外呼任务</div>${T('FR-4-4','fr')}</div>
+    <div class="field"><label>任务话术脚本</label><textarea class="textarea">开场：您好，我是伊人美学静安店的顾问小伊。
+主体：本月是您的生日月，为您准备了一份专属礼遇……
+结尾：方便的话我帮您预约本周的时间？</textarea></div>
+    <div class="grid2"><div class="field"><label>外呼数量</label><input class="input" value="300"></div>
+    <div class="field"><label>时段</label><input class="input" value="10:00-12:00 / 15:00-20:00"></div></div>
+    <button class="btn btn-primary btn-block" onclick="App.genVoice()">发起外呼（需管理员二次确认）</button>
+    <div id="voiceOut"></div>`;
+  return {
+    title:'语音回访', tab:'crm', fr:'FR-4-4 语音回访 [订阅]',
+    desc:'AI 语音外呼完成回访、到期提醒与预约确认：话术脚本、语义理解、意图识别、结果打标、人工转接。',
+    tips:['配置话术脚本并发起任务','查看接通率与意图分布','查看「别再打」永久排除'],
+    html:`<div class="page-pad">
+      <div class="alert warn"><span class="a-ico">⚠</span><div>外呼须遵守<b>顾客同意与时段合规</b>；任务需管理员二次确认数量与时间。</div></div>
+      ${locked ? UI.lock(inner,'语音外呼需订阅客情 Agent 增值包','FR-4-4') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">📈</span>任务效果（上月）</div></div>
+        <div class="stat-grid">${UI.stat('68%','接通率','')}${UI.stat(186,'有效沟通','')}${UI.stat('9%','转人工率','')}</div>
+        <div class="bars" style="margin-top:10px">${UI.bars([{n:'高意向',v:72},{n:'延后',v:58},{n:'无意向',v:41},{n:'拒接',v:29}],' 人')}</div>
+        <div class="hint muted" style="font-size:10.5px;margin-top:8px">顾客要求「别再打」后同类任务永久排除；每通电话有摘要与标签。</div>
+      </div>
+    </div>`
+  };
+};
+
+Pages['crm/member'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">💳</span>会员档案（同步中）</div>${T('FR-4-5','fr')}</div>
+    <div class="list-item"><div class="avatar">张</div><div class="fi"><div class="t">张女士 · 钻石会员</div><div class="s">储值余额 ¥186 · 10 次卡剩 3 次 · 上次到店 11-01</div></div>${T('已同步','ok')}</div>
+    <div class="list-item"><div class="avatar">刘</div><div class="fi"><div class="t">刘女士 · 金卡</div><div class="s">储值余额 ¥1,240 · 无次卡 · 上次到店 10-30</div></div>${T('已同步','ok')}</div>
+    <div class="list-item"><div class="avatar">陈</div><div class="fi"><div class="t">陈女士 · 银卡</div><div class="s">储值余额 ¥0 · 5 次卡剩 1 次 · 待续费</div></div>${T('待续费','warn')}</div>
+    <div class="alert info" style="margin-top:10px"><span class="a-ico">ⓘ</span><div>AI 触达基于<b>真实会员状态</b>驱动：余额 &lt; ¥200 进续费提醒；次卡剩 3 次触发续卡话术；预约按会员等级折扣自动算应付与扣次。</div></div>`;
+  return {
+    title:'会员系统对接', tab:'crm', fr:'FR-4-5 会员系统对接 [订阅]',
+    desc:'第三方 API 对接门店既有会员/储值/积分系统，档案、余额、卡券、消费记录双向同步。',
+    tips:['查看会员档案同步状态','查看余额/扣次双向对账','关闭订阅查看引导态而非静默失效'],
+    html:`<div class="page-pad">
+      ${locked ? UI.lock(inner,'未订阅时引导开通而非静默失效','FR-4-5') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">🔁</span>对账与一致性</div></div>
+        <div class="list-item"><div class="fi"><div class="t">主数据源</div><div class="s">门店会员系统优先（客如云）</div></div>${T('已定义','ok')}</div>
+        <div class="list-item"><div class="fi"><div class="t">扣次/储值幂等</div><div class="s">同一请求重复提交仅生效一次</div></div>${T('已开启','ok')}</div>
+        <div class="list-item"><div class="fi"><div class="t">对账差异表</div><div class="s">近 7 日差异 2 笔，原因：离线消费未回传</div></div>${T('可查原因','warn')}</div>
+      </div>
+    </div>`
+  };
+};
+
+/* =======================================================
+   模块五：短视频 AI Agent
+======================================================= */
+Pages['video'] = () => ({
+  title:'短视频 AI Agent', tab:'video', fr:'FR-5-1 ~ FR-5-5',
+  desc:'美业最适合被「看见」：把内容生产与分发成本降到接近零。',
+  tips:['生成 3 个选题脚本','一键多平台发布','查看矩阵分发进度'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🎬</span>本周内容</div><div class="card-more" onclick="App.go('video/board')">数据 →</div></div>
+      <div class="stat-grid">${UI.stat(12,'已发布','')}${UI.stat('48.2万','总播放','+18%')}${UI.stat(42,'私信留资','')}${UI.stat(9,'到店','')}</div>
+      <div class="hint muted" style="font-size:11px;margin-top:10px">爆款结构：过程实拍 + 前后对比（完播率 41%，高于均值 1.7 倍）。</div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⚙️</span>功能点（5 项）</div></div>
+      ${fnCard('FR-5-1','AI内容生成','基础','选题、脚本/口播、分镜、标题话题、封面文案，支持成片合成','video/create')}
+      ${fnCard('FR-5-2','多平台发布','基础','一次编辑多平台适配发布，回传状态与链接','video/publish')}
+      ${fnCard('FR-5-3','一键分发','基础','矩阵账号/技师账号/社群任务化下发与完成状态回收','video/dispatch')}
+      ${fnCard('FR-5-4','评论智能回复','订阅','多平台评论意图识别与自动回复，负面升级人工','video/comment')}
+      ${fnCard('FR-5-5','数据看板','订阅','多平台内容数据汇总、爆款归因与运营/引流打通','video/board')}
+    </div>
+  </div>`
+});
+
+Pages['video/create'] = () => ({
+  title:'AI 内容生成', tab:'video', fr:'FR-5-1 AI内容生成 [基础]',
+  desc:'围绕门店项目、素材片段与热点模板，生成选题、脚本/口播、分镜、标题话题、封面文案。',
+  tips:['上传素材后生成 3 个脚本','查看钩子/主体/引导结构','查看合规审查结果'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t">素材输入</div></div>
+      <div class="field"><label>已上传素材</label>
+        <div class="row" style="gap:8px">
+          ${[1,2,3].map(i=>`<div style="flex:1;height:64px;border-radius:10px;background:linear-gradient(135deg,#F6DDE3,#EFD3DC);display:flex;align-items:center;justify-content:center;font-size:11px;color:#B85A75">新款穿戴甲 ${i}</div>`).join('')}
+        </div></div>
+      <div class="field"><label>内容方向</label>
+        <div class="chips"><div class="chip on" onclick="App.chip(this)">新款展示</div><div class="chip" onclick="App.chip(this)">前后对比</div><div class="chip" onclick="App.chip(this)">科普避坑</div><div class="chip" onclick="App.chip(this)">门店日常</div></div></div>
+      <div class="grid2"><div class="field"><label>生成数量</label><select class="input"><option>3 条选题</option><option>5 条选题</option><option>10 条选题</option></select></div>
+      <div class="field"><label>目标平台</label><select class="input"><option>抖音（9:16）</option><option>视频号（9:16）</option><option>小红书（3:4）</option></select></div></div>
+      <button class="btn btn-primary btn-block" onclick="App.genScript()">✦ AI 生成脚本</button>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px;line-height:1.6">合规：不得生成虚假效果对比与医疗功效宣称；顾客出镜需肖像授权留痕。</div>
+    </div>
+    <div id="scriptOut"></div>
+  </div>`
+});
+
+Pages['video/publish'] = () => ({
+  title:'多平台发布', tab:'video', fr:'FR-5-2 多平台发布 [基础]',
+  desc:'一次编辑、多平台适配发布：标题长度、话题、封面尺寸、发布时间自动处理，回传状态与链接。',
+  tips:['勾选 3 个平台一键发布','查看失败原因并单平台重发','查看链接回传'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🚀</span>发布任务</div></div>
+      <div class="list-item"><div class="avatar" style="width:52px;height:52px;flex:0 0 52px;background:linear-gradient(135deg,#F6DDE3,#E9C6D2);font-size:11px">穿戴甲<br>成片</div>
+        <div class="fi"><div class="t">新款穿戴甲 · 3秒钩子版</div><div class="s">00:30 · 9:16 · 已过合规审查</div></div></div>
+      ${DB.platforms.map(p=>`<div class="list-item">
+        <div class="avatar" style="background:${p.ok?(p.wait?'#FDF3E6':'#E8F7F0'):'#FDECEC'};color:${p.ok?(p.wait?'#E8891C':'#23A06B'):'#E5484D'}">${p.n[0]}</div>
+        <div class="fi"><div class="t">${p.n} ${T(p.st, p.ok?(p.wait?'warn':'ok'):'danger')}</div><div class="s">${p.link!=='—'?'链接 '+p.link+' · ':''}${p.v}</div></div>
+        ${p.ok?'':`<button class="btn sm btn-primary" onclick="UI.toast('已修复封面并重新提交（演示）')">修复重发</button>`}</div>`).join('')}
+      <div class="hint muted" style="font-size:11px;margin-top:10px;line-height:1.7">平台规则变更由后台配置热更新，不改版本；不绕平台规则做违规发布。</div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🧩</span>自动适配项</div></div>
+      <div class="list-item"><div class="fi"><div class="t">标题改写</div><div class="s">抖音 55 字 / 小红书 20 字 + emoji</div></div>${T('已适配','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">封面裁切</div><div class="s">按平台比例自动裁切并避开二维码区域</div></div>${T('已适配','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">话题挂载</div><div class="s">#穿戴甲 #秋季美甲 #静安美甲</div></div>${T('已适配','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">定时发布</div><div class="s">抖音 19:30 / 视频号 20:00 / 小红书 12:00</div></div>${T('已排期','ok')}</div>
+    </div>
+  </div>`
+});
+
+Pages['video/dispatch'] = () => ({
+  title:'一键分发', tab:'video', fr:'FR-5-3 一键分发 [基础]',
+  desc:'内容批量分发给门店矩阵账号、员工/技师账号或社群/朋友圈，任务化下发与完成状态回收。',
+  tips:['选择分发范围并下发','查看差异化改写结果','撤回分发任务'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📤</span>分发任务</div></div>
+      <div class="field"><label>分发对象</label>
+        <div class="chips"><div class="chip on" onclick="App.chip(this,'multi')">8 家门店</div><div class="chip on" onclick="App.chip(this,'multi')">25 位技师</div><div class="chip" onclick="App.chip(this,'multi')">社群/朋友圈</div></div></div>
+      <div class="alert info"><span class="a-ico">ⓘ</span><div>系统将按账号属性自动改写差异化文案（店名、地址、专属优惠），<b>地址/价格/时间等硬信息不变</b>；多账号同内容自动降重。</div></div>
+      <button class="btn btn-primary btn-block" onclick="App.genDispatch()">下发发布任务</button>
+      <div id="dispatchOut"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📋</span>任务回收</div></div>
+      <div class="row between" style="margin-bottom:8px"><span style="font-size:13px">总部下发 · 秋日穿戴甲活动</span><b>28 / 33 已发布</b></div>
+      <div class="prog gold"><i style="width:85%"></i></div>
+      <div class="hint muted" style="font-size:11px;margin-top:8px">5 条待处理（3 家门店未确认、2 位技师素材未下载）；每条记录含账号、时间、状态、实际链接；任务可撤回。</div>
+      <div class="row" style="gap:8px;margin-top:10px">
+        <button class="btn btn-outline sm" onclick="UI.toast('已提醒 5 个未处理账号（演示）')">催办</button>
+        <button class="btn btn-outline sm" onclick="UI.toast('任务已撤回（演示）')">撤回任务</button>
+      </div>
+    </div>
+  </div>`
+});
+
+Pages['video/comment'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">💬</span>评论智能回复</div>${T('FR-5-4','fr')}</div>
+    ${DB.comments.map(c=>`<div class="list-item" style="align-items:flex-start">
+      <div class="avatar" style="background:${c.i==='负面投诉'?'#FDECEC':(c.i==='无效评论'?'#F1F3F6':'#E8F7F0')};color:${c.i==='负面投诉'?'#E5484D':(c.i==='无效评论'?'#9AA1AC':'#23A06B')}">${c.i[0]}</div>
+      <div class="fi"><div class="t">${c.u}「${c.t}」${T(c.i, c.i==='负面投诉'?'danger':(c.i==='无效评论'?'':'ok'))}</div>
+      <div class="s wrap" style="margin-top:5px;line-height:1.7">${c.r!=='—'?`AI 回复：${c.r}`:'— 不回复 —'}</div>
+      <div class="s" style="margin-top:4px">标记：${T(c.lv, c.lv==='高意向'?'danger':(c.lv==='待人工'?'warn':''))}</div></div></div>`).join('')}
+    <div class="alert danger" style="margin-top:8px"><span class="a-ico">⚡</span><div>负面评论使用<b>致歉 + 私信处理</b>固定合规话术，评论区不做自由辩解，10 分钟内通知店长并纳入客情流程。</div></div>`;
+  return {
+    title:'评论智能回复', tab:'video', fr:'FR-5-4 评论智能回复 [订阅]',
+    desc:'多平台评论 AI 意图识别与自动回复：询价、预约意向、负面投诉、无效评论分类与情感聚合。',
+    tips:['查看四类意图的自动回复','查看负面评论升级处理','关闭订阅查看停止自动回复'],
+    html:`<div class="page-pad">
+      ${locked ? UI.lock(inner,'订阅失效将停止自动回复但保留分析结果','FR-5-4') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">📊</span>评论分析</div></div>
+        <div class="stat-grid">${UI.stat(1,248,'本周评论','')}${UI.stat('96%','自动回复率','')}${UI.stat(63,'高意向留资','')}</div>
+        <div class="hint muted" style="font-size:10.5px;margin-top:8px">同一用户重复评论不重复回复；意图分类支持人工修正，修正数据作为优化样本。</div>
+      </div>
+    </div>`
+  };
+};
+
+Pages['video/board'] = () => {
+  const locked = !App.state.subscribed;
+  const inner = `
+    <div class="card-h"><div class="card-t"><span class="ico">📊</span>内容数据（本周 12 条）</div>${T('FR-5-5','fr')}</div>
+    <div class="stat-grid" style="margin-bottom:10px">${UI.stat('48.2万','播放','+18%')}${UI.stat('41%','完播率','+6pt')}${UI.stat(42,'私信留资','')}${UI.stat(9,'到店归因','')}</div>
+    <div class="card-t" style="font-size:12.5px;margin:10px 0 6px">爆款结构 Top 榜</div>
+    <table class="tbl"><tr><th>内容</th><th>完播率</th><th>留资</th></tr>
+    <tr><td>过程实拍+前后对比</td><td>41%</td><td>18</td></tr>
+    <tr><td>3秒钩子 · 穿戴甲</td><td>36%</td><td>15</td></tr>
+    <tr><td>纯音乐卡点</td><td>29%</td><td>3</td></tr></table>
+    <div class="alert info" style="margin-top:10px"><span class="a-ico">💡</span><div><b>AI 结论</b>：「过程实拍 + 前后对比」完播率与留资双高，建议下周选题向该结构倾斜；纯音乐卡点播放高但转化差（留资 3 条），建议减少。</div></div>
+    <button class="btn btn-primary btn-block" onclick="UI.toast('已按爆款结构创建新脚本任务（联动 FR-5-1）')">✦ 按爆款结构生成新脚本</button>`;
+  return {
+    title:'短视频数据看板', tab:'video', fr:'FR-5-5 数据看板 [订阅]',
+    desc:'多平台内容数据汇总：播放、完播、互动、涨粉、私信线索、到店归因，支持爆款归因。',
+    tips:['切换日/周/月与账号下钻','查看爆款归因到内容 ID','一键生成新脚本任务'],
+    html:`<div class="page-pad">
+      ${locked ? UI.lock(inner,'订阅后可查看完整看板与导出','FR-5-5') : `<div class="card">${inner}</div>`}
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">🔗</span>口径统一</div></div>
+        <div class="hint muted" style="font-size:11px;line-height:1.8">
+          数据以平台 API 回传为准，采集延迟明示（T+1）；跨平台合并去重同一人；与模块二流量分析、模块三运营分析<b>共用线索/会员主数据</b>，避免两套口径。
+        </div>
+      </div>
+    </div>`
+  };
+};
+
+</script>
+<script>
+/* pages-system.js */
+/* ===== 账号体系 / 数据看板 / 平台端 ===== */
+
+/* ---------- 登录 FR-6-1 ---------- */
+Pages['login'] = () => ({
+  title:'登录', noNav:true, tab:null, fr:'FR-6-1 登录能力',
+  desc:'手机号短信验证码登录 + 微信快捷登录；首次登录完成手机号与微信账号绑定，绑定后互认同一账号。',
+  tips:['选择角色后体验权限差异','点击「微信快捷登录」一键进入','体验验证码登录流程'],
+  html:`
+  <div style="background:linear-gradient(160deg,#FCEFF2 0%,#F7F3FB 45%,#F2F4F7 100%);min-height:100%;padding:26px 22px 30px">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--brand),#E9A0A8);color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 8px 20px rgba(212,112,139,.3)">美</div>
+      <div style="font-size:19px;font-weight:700">美业智能 Agent 系统</div>
+      <div class="muted" style="font-size:12px;margin-top:6px">招聘 · 转让引流 · 运营 · 客情 · 短视频</div>
+    </div>
+
+    <div style="background:#fff;border-radius:16px;padding:16px;box-shadow:var(--sh)">
+      <div class="seg" style="margin-bottom:14px">
+        <div class="on" onclick="App.loginSeg(this,'phone')">手机号登录</div>
+        <div onclick="App.loginSeg(this,'wechat')">微信快捷登录</div>
+      </div>
+
+      <div id="loginPhone">
+        <div class="field"><label>手机号</label><input class="input" value="138 0000 0001"></div>
+        <div class="field"><label>验证码</label>
+          <div class="row" style="gap:8px"><input class="input" value="8888" style="flex:1">
+          <button class="btn btn-outline" style="flex:0 0 92px" onclick="UI.toast('验证码已发送（演示：8888）')">获取验证码</button></div>
+        </div>
+      </div>
+
+      <div id="loginWechat" class="hidden" style="text-align:center;padding:8px 0 4px">
+        <div style="width:78px;height:78px;border-radius:50%;background:#EAF7EE;color:#2BAE66;display:flex;align-items:center;justify-content:center;font-size:34px;margin:6px auto 10px">💬</div>
+        <div style="font-size:13.5px;font-weight:600">伊人美学 · 周敏</div>
+        <div class="muted" style="font-size:11.5px;margin-top:4px">小程序授权一键登录，无需验证码</div>
+      </div>
+
+      <div class="field" style="margin-top:12px"><label>登录身份（演示用）</label>
+        <div class="chips">
+          <div class="chip on" onclick="App.chip(this);App.setRole('admin')">门店管理员</div>
+          <div class="chip" onclick="App.chip(this);App.setRole('operator')">运营</div>
+          <div class="chip" onclick="App.chip(this);App.setRole('tester')">测试</div>
+        </div>
+        <div class="hint muted" style="font-size:10.5px;margin-top:6px;line-height:1.6">手机号与微信首次登录将完成绑定，绑定后互认同一账号；换绑与解绑规则待确认。</div>
+      </div>
+
+      <button class="btn btn-primary btn-block" style="margin-top:6px" onclick="App.go('home')">登录 / 进入工作台</button>
+      <div class="muted" style="font-size:10.5px;text-align:center;margin-top:10px;line-height:1.6">登录即代表同意《用户协议》与《隐私政策》<br>演示环境，所有数据均为模拟内容</div>
+    </div>
+
+    <div style="margin-top:14px;background:#fff;border-radius:12px;padding:12px 14px;box-shadow:var(--sh)">
+      <div style="font-size:12px;font-weight:700;margin-bottom:6px">账号类型说明（FR-6-2）</div>
+      <div class="muted" style="font-size:11px;line-height:1.8">
+        · <b>管理员</b>：本店全部功能、账号与付费管理、高风险动作最终授权<br>
+        · <b>运营</b>：五大 Agent 日常操作，不可管理账号与付费<br>
+        · <b>测试</b>：沙箱租户隔离，数据不进入业务统计
+      </div>
+    </div>
+  </div>`
+});
+
+/* ---------- 工作台首页 ---------- */
+Pages['home'] = () => {
+  const s = App.state;
+  const roleName = {admin:'周敏（管理员）',operator:'李佳（运营）',tester:'测试账号A（沙箱）'}[s.role];
+  return {
+  title:'工作台', noNav:true, tab:'home', fr:'端到端主流程 · 五大 Agent 入口',
+  desc:'登录后进入工作台：门店信息、今日核心指标、五大 Agent 入口与待办提醒。',
+  tips:['点击任意 Agent 卡片进入','查看今日待办与库存预警','切换左侧订阅/角色开关'],
+  html:`
+  <div>
+    <div class="hero">
+      <div class="row between">
+        <div class="h-store"><div class="avatar">伊</div><div><div>${DB.store.name} · ${DB.store.branch}</div>
+        <div class="h-sub">${DB.store.type} · ${DB.store.seat} 工位 · ${roleName}</div></div></div>
+        <div style="text-align:right;font-size:11px;opacity:.9">${s.subscribed?'订阅版':'基础版'}<br>${T(s.subscribed?'全功能':'5 项基础', s.subscribed?'sub':'base')}</div>
+      </div>
+      <div class="h-stats">
+        <div class="h-stat"><div class="n">12</div><div class="l">今日预约</div></div>
+        <div class="h-stat"><div class="n">23</div><div class="l">线索</div></div>
+        <div class="h-stat"><div class="n">7</div><div class="l">留资</div></div>
+        <div class="h-stat"><div class="n">3</div><div class="l">内容发布</div></div>
+      </div>
+    </div>
+
+    <div class="page-pad" style="padding-top:0">
+      <div class="card up-card">
+        <div class="card-h"><div class="card-t"><span class="ico">🔔</span>今日待办</div><div class="card-more">全部</div></div>
+        <div class="list-item"><div class="avatar" style="background:#FDECEC;color:#E5484D">急</div>
+          <div class="fi"><div class="t">2 项耗材低于安全库存</div><div class="s">底胶/封层、院线精华，建议今日补货</div></div>
+          <button class="btn sm btn-primary" onclick="App.go('ops/stock')">处理</button></div>
+        <div class="list-item"><div class="avatar" style="background:#FDF3E6;color:#E8891C">客</div>
+          <div class="fi"><div class="t">1 条不适反馈待跟进</div><div class="s">刘女士 · 美瞳线干痒 · 已转人工</div></div>
+          <button class="btn sm btn-outline" onclick="App.go('crm/visit')">跟进</button></div>
+        <div class="list-item"><div class="avatar" style="background:#EAF1FE;color:#3A7AFE">招</div>
+          <div class="fi"><div class="t">4 位 A 级候选人待约面</div><div class="s">美甲师岗位 · 3 天内需补齐 2 人</div></div>
+          <button class="btn sm btn-outline" onclick="App.go('hr/screen')">查看</button></div>
+        <div class="list-item"><div class="avatar" style="background:#FDECEC;color:#E5484D">渠</div>
+          <div class="fi"><div class="t">会员系统授权已过期</div><div class="s">客情数据同步中断，需重新授权</div></div>
+          <button class="btn sm btn-outline" onclick="App.go('account/integration')">授权</button></div>
+      </div>
+
+      <div class="card-t" style="font-size:13px;margin:16px 0 8px;padding-left:2px">五大 AI Agent</div>
+
+      <div class="agent-card" onclick="App.go('hr')">
+        <div class="agent-ico ac-1">🧑‍🎨</div>
+        <div class="agent-m"><div class="t">招聘 AI Agent ${T('FR-1','fr')}</div>
+        <div class="d">JD 生成 · 人才库对接 · 文字筛选 · 音视频面试 · 背景核验</div>
+        <div class="tags">${T('基础 3 项','base')}${T('增值 2 项','sub')}${T('4 位 A 级候选','ok')}</div></div>
+        <span class="muted">›</span>
+      </div>
+
+      <div class="agent-card" onclick="App.go('flow')">
+        <div class="agent-ico ac-2">🏪</div>
+        <div class="agent-m"><div class="t">转让引流 AI ${T('FR-2','fr')}</div>
+        <div class="d">素材生成 · 流量池对接 · 文字咨询 · 多渠道整合 · 流量分析</div>
+        <div class="tags">${T('基础 3 项','base')}${T('增值 2 项','sub')}${T('曝光 4,386','info')}</div></div>
+        <span class="muted">›</span>
+      </div>
+
+      <div class="agent-card" onclick="App.go('ops')">
+        <div class="agent-ico ac-3">📊</div>
+        <div class="agent-m"><div class="t">运营 AI Agent ${T('FR-3','fr')}</div>
+        <div class="d">方案生成 · 耗材管理 · 文案更新 · 推广优化 · 数据分析</div>
+        <div class="tags">${T('基础 3 项','base')}${T('增值 2 项','sub')}${T('2 项库存预警','danger')}</div></div>
+        <span class="muted">›</span>
+      </div>
+
+      <div class="agent-card" onclick="App.go('crm')">
+        <div class="agent-ico ac-4">💗</div>
+        <div class="agent-m"><div class="t">客情 AI Agent ${T('FR-4','fr')}</div>
+        <div class="d">智能预约 · 文字回访 · 客情问答 · 语音回访 · 会员对接</div>
+        <div class="tags">${T('基础 3 项','base')}${T('增值 2 项','sub')}${T('到店率 92%','ok')}</div></div>
+        <span class="muted">›</span>
+      </div>
+
+      <div class="agent-card" onclick="App.go('video')">
+        <div class="agent-ico ac-5">🎬</div>
+        <div class="agent-m"><div class="t">短视频 AI Agent ${T('FR-5','fr')}</div>
+        <div class="d">内容生成 · 多平台发布 · 一键分发 · 评论回复 · 数据看板</div>
+        <div class="tags">${T('基础 3 项','base')}${T('增值 2 项','sub')}${T('播放 48.2万','info')}</div></div>
+        <span class="muted">›</span>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="card-h"><div class="card-t"><span class="ico">🧭</span>端到端主流程</div></div>
+        <div class="steps">
+          <div class="step on"><span class="dot">1</span>登录</div><div class="step-line"></div>
+          <div class="step on"><span class="dot">2</span>建店</div><div class="step-line"></div>
+          <div class="step on"><span class="dot">3</span>开通</div><div class="step-line"></div>
+          <div class="step on"><span class="dot">4</span>使用</div><div class="step-line"></div>
+          <div class="step"><span class="dot">5</span>付费增值</div>
+        </div>
+        <div class="hint muted" style="font-size:11px;margin-top:8px;line-height:1.7">登录 → 门店创建/绑定 → 开通基础版 → 使用 Agent → 触发增值付费 → 门店端看板 → 续费/升级 → 平台端监控。</div>
+      </div>
+    </div>
+  </div>`
+  };
+};
+
+/* ---------- 门店端数据看板 FR-7-3 ---------- */
+Pages['board'] = () => {
+  const tab = App.state.boardTab || 'overview';
+  const tabs = [['overview','总览'],['hr','招聘'],['flow','引流'],['ops','运营'],['crm','客情'],['video','短视频']];
+  const body = {
+    overview:`<div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">📈</span>本周核心指标</div><div class="card-more">11.02-11.08</div></div>
+        <div class="stat-grid">${UI.stat(186,'到店量','+6.9%')}${UI.stat(23,'线索数','+6')}${UI.stat(7,'留资数','+2')}${UI.stat(12,'内容发布','+3')}${UI.stat(2,'库存预警','')}${UI.stat(5,'待办回访','')}</div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">📉</span>到店趋势（近 12 周）</div></div>
+        <div class="line-chart">${DB.pc.trend.map((v,i)=>`<div class="lc" style="height:${v/1.4}%"><span>${i+1}周</span></div>`).join('')}</div>
+        <div style="height:16px"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><div class="card-t"><span class="ico">🎯</span>按 Agent 分区下钻</div></div>
+        ${[['招聘','岗位 3 · 简历 71 · 入职 2','hr'],['转让引流','曝光 4,386 · 留资 7 · 到店 3','flow'],['运营','方案 2 · 活动 ROI 1.6 · 耗材周转 4.2%','ops'],['客情','预约达成 92% · 爽约 5% · 复购 32%','crm'],['短视频','播放 48.2万 · 留资 42 · 到店 9','video']].map(r=>
+          `<div class="list-item" onclick="App.go('${r[2]}')"><div class="fi"><div class="t">${r[0]}</div><div class="s">${r[1]}</div></div><span class="muted">›</span></div>`).join('')}
+      </div>`,
+    hr:`<div class="card"><div class="card-h"><div class="card-t">招聘看板</div></div>
+        <div class="stat-grid">${UI.stat(3,'岗位数','')}${UI.stat(71,'简历数','+12')}${UI.stat(26,'初筛通过','')}${UI.stat(9,'约面数','')}${UI.stat(2,'入职数','')}${UI.stat('A 36%','渠道质量','')}</div>
+        ${UI.bars([{n:'美业人才库',v:38},{n:'BOSS渠道',v:21},{n:'门店直投',v:12}],' 份')}</div>`,
+    flow:`<div class="card"><div class="card-h"><div class="card-t">引流漏斗</div></div>
+        ${UI.funnel([{l:'曝光',v:4386},{l:'点击',v:612},{l:'咨询',v:145},{l:'留资',v:23},{l:'到店',v:3}])}
+        <div class="hint muted" style="font-size:11px;margin-top:10px">支持按时间段与渠道筛选，各环节可下钻到明细线索（FR-2-5 为订阅功能）。</div></div>`,
+    ops:`<div class="card"><div class="card-h"><div class="card-t">运营看板</div></div>
+        <div class="stat-grid">${UI.stat(2,'执行中方案','')}${UI.stat('1.6','活动 ROI','偏低')}${UI.stat('4.2%','耗材损耗','-0.8pt')}${UI.stat(5,'文案更新','')}</div>
+        <div class="card-t" style="font-size:12.5px;margin:10px 0 6px">技师产出排行</div>
+        ${UI.bars([{n:'林技师',v:42},{n:'陈技师',v:36},{n:'周技师',v:31},{n:'吴技师',v:24}],' 单')}</div>`,
+    crm:`<div class="card"><div class="card-h"><div class="card-t">客情看板</div></div>
+        <div class="stat-grid">${UI.stat('92%','预约达成率','+3pt')}${UI.stat('5%','爽约率','-1pt')}${UI.stat('41%','回访回复率','+6pt')}${UI.stat('32%','复购率','+4pt')}</div>
+        <div class="card-t" style="font-size:12.5px;margin:10px 0 6px">会员分层与余额分布</div>
+        ${UI.bars([{n:'钻石',v:18},{n:'金卡',v:46},{n:'银卡',v:72},{n:'新客',v:35}],' 人')}</div>`,
+    video:`<div class="card"><div class="card-h"><div class="card-t">短视频看板</div></div>
+        <div class="stat-grid">${UI.stat('48.2万','播放','+18%')}${UI.stat('41%','完播率','')}${UI.stat(1248,'互动','')}${UI.stat(63,'涨粉','')}</div>
+        <div class="hint muted" style="font-size:11px;margin-top:10px">完整看板（含私信线索、爆款 Top 榜）为订阅功能 FR-5-5。</div>
+        <button class="btn btn-gold btn-block" style="margin-top:10px" onclick="App.go('video/board')">进入短视频数据看板</button></div>`
+  }[tab];
+  return {
+  title:'数据看板', tab:'board', fr:'FR-7-3 数据看板 · 门店端',
+  desc:'门店端：数据总览 + 五大模块详情 + 运营统计（同环比、技师排行、月度报告导出）。',
+  tips:['切换 6 个分部页签','查看同环比趋势','导出月度经营报告'],
+  html:`
+  <div class="page-pad">
+    <div class="seg" style="margin-bottom:12px;flex-wrap:wrap">
+      ${tabs.map(t=>`<div class="${tab===t[0]?'on':''}" onclick="App.setBoardTab('${t[0]}')">${t[1]}</div>`).join('')}
+    </div>
+    ${body}
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📐</span>指标字典</div></div>
+      <div class="hint muted" style="font-size:11px;line-height:1.8">
+        所有看板指标均含定义、计算式、数据源、更新频率与延迟说明；跨模块共用字段（线索、会员、到店）同源同义；门店端仅展示本门店数据；订阅类数据仅对已订阅门店展示。
+      </div>
+      <button class="btn btn-outline btn-block" style="margin-top:10px" onclick="UI.toast('月度经营报告已导出（演示）')">导出月度经营报告</button>
+    </div>
+  </div>`
+  };
+};
+
+/* ---------- 我的 / 账号 ---------- */
+Pages['account'] = () => {
+  const s = App.state;
+  const roleName = {admin:'门店管理员',operator:'运营',tester:'测试'}[s.role];
+  return {
+  title:'我的', tab:'mine', fr:'FR-6-1 ~ FR-6-4 账号与系统体系',
+  desc:'账号信息、成员与权限、安全日志、订阅与账单、第三方集成配置。',
+  tips:['查看权限矩阵差异','打开安全日志','切换订阅状态'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="row" style="gap:12px">
+        <div class="avatar lg" style="width:52px;height:52px;flex:0 0 52px;font-size:20px">周</div>
+        <div class="fi"><div class="t" style="font-size:16px">周敏 ${T(roleName,'base')}</div>
+        <div class="s">${DB.store.name} · ${DB.store.branch} · 138****0001</div></div>
+      </div>
+      <div class="row" style="gap:8px;margin-top:12px">
+        <div class="stat" style="flex:1;box-shadow:none;background:#F7F8FA;padding:9px"><div class="n" style="font-size:16px">${s.subscribed?'订阅版':'基础版'}</div><div class="l">服务层级</div></div>
+        <div class="stat" style="flex:1;box-shadow:none;background:#F7F8FA;padding:9px"><div class="n" style="font-size:16px">2027-03-01</div><div class="l">订阅到期</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">👥</span>成员与权限</div><div class="card-more" onclick="App.go('account/members')">管理 →</div></div>
+      ${DB.members.slice(0,3).map(m=>`<div class="list-item"><div class="avatar">${m.n[0]}</div>
+        <div class="fi"><div class="t">${m.n} ${T(m.role, m.role==='门店管理员'?'base':'')}</div><div class="s">${m.store} · ${m.phone} · ${m.exp}</div></div>
+        ${T(m.st,'ok')}</div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="list-item" onclick="App.go('account/perm')"><div class="avatar" style="background:#EAF1FE;color:#3A7AFE">权</div><div class="fi"><div class="t">权限矩阵</div><div class="s">三类角色能力差异明细</div></div><span class="muted">›</span></div>
+      <div class="list-item" onclick="App.go('account/security')"><div class="avatar" style="background:#FDF3E6;color:#E8891C">安</div><div class="fi"><div class="t">安全管理</div><div class="s">密码修改/重置、登录日志、账号有效期</div></div><span class="muted">›</span></div>
+      <div class="list-item" onclick="App.go('account/subscription')"><div class="avatar" style="background:#FBF4E6;color:#C29A4F">订</div><div class="fi"><div class="t">订阅与账单</div><div class="s">${s.subscribed?'五大 Agent 打包 · ¥699/月':'基础版（一次性购买）'}</div></div><span class="muted">›</span></div>
+      <div class="list-item" onclick="App.go('account/integration')"><div class="avatar" style="background:#E8F7F0;color:#23A06B">集</div><div class="fi"><div class="t">渠道与集成</div><div class="s">${DB.integrations.filter(i=>!i.ok).length} 项需处理</div></div><span class="muted">›</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🏬</span>门店信息</div><div class="card-more">编辑</div></div>
+      <div class="list-item"><div class="fi"><div class="t">门店名称</div><div class="s">${DB.store.name} · ${DB.store.branch}</div></div></div>
+      <div class="list-item"><div class="fi"><div class="t">经营类目</div><div class="s">${DB.store.type}</div></div></div>
+      <div class="list-item"><div class="fi"><div class="t">规模</div><div class="s">${DB.store.seat} 工位 · ${DB.store.staff} 名员工 · ${DB.store.city}</div></div></div>
+    </div>
+
+    <button class="btn btn-outline btn-block" onclick="App.logout()">退出登录</button>
+  </div>`
+  };
+};
+
+Pages['account/members'] = () => ({
+  title:'成员管理', tab:'mine', fr:'FR-6-2 账号类型与权限',
+  desc:'管理员创建门店成员账号、设置生效日期与所辖门店；测试账号由平台方统一发放并设有效期。',
+  tips:['新建运营账号','查看测试账号有效期','体验运营角色权限限制'],
+  html:`
+  <div class="page-pad">
+    ${App.state.role!=='admin'?`<div class="alert warn"><span class="a-ico">⚠</span><div>当前为<b>运营</b>身份，仅可查看成员，不可新建/停用账号或管理付费。</div></div>`:''}
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">👥</span>成员列表</div>
+        <div class="card-more" onclick="${App.state.role==='admin'?"App.newMember()":"UI.deny('运营无新建账号权限')"}">+ 新建</div></div>
+      ${DB.members.map(m=>`<div class="list-item">
+        <div class="avatar" style="background:${m.role==='测试'?'#F1F3F6':'#FCEFF2'};color:${m.role==='测试'?'#9AA1AC':'#D4708B'}">${m.n[0]}</div>
+        <div class="fi"><div class="t">${m.n} ${T(m.role, m.role==='门店管理员'?'base':(m.role==='测试'?'':'info'))}</div>
+        <div class="s">${m.phone} · ${m.store} · 有效期 ${m.exp}</div></div>${T(m.st,'ok')}</div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🧪</span>测试账号管控（补充）</div></div>
+      <div class="list-item"><div class="fi"><div class="t">沙箱租户隔离</div><div class="s">测试账号数据不进入业务统计与看板</div></div>${T('已开启','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">有效期管控</div><div class="s">默认 7 天，到期自动失效</div></div>${T('7 天','warn')}</div>
+      <div class="hint muted" style="font-size:11px;margin-top:8px;line-height:1.7">建议以沙箱租户隔离；验收阶段由平台方在沙箱跑通「发布→咨询→留资→看板」全链路后再切生产。</div>
+    </div>
+  </div>`
+});
+
+Pages['account/perm'] = () => ({
+  title:'权限矩阵', tab:'mine', fr:'FR-6-2 账号类型与权限（明细待确认）',
+  desc:'三类角色在五大 Agent、账号管理、付费与高风险动作上的能力差异。',
+  tips:['对比三类角色能力','查看高风险动作授权要求','注意数据隔离规则'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🔐</span>权限明细</div></div>
+      <div style="overflow-x:auto">
+      <table class="tbl" style="min-width:340px">
+        <tr><th>能力</th><th>管理员</th><th>运营</th><th>测试</th></tr>
+        ${[['使用五大 Agent 基础功能','✓','✓','✓'],
+           ['内容编辑与发布','✓','✓','✓（沙箱）'],
+           ['账号开通/停用','✓','—','—'],
+           ['订阅与付费管理','✓','—','—'],
+           ['知识库与耗材标准维护','✓','部分','—'],
+           ['语音外呼（FR-4-4）','最终授权','发起申请','—'],
+           ['自动投放（FR-3-4）','最终授权','发起申请','—'],
+           ['背景核验（FR-1-5）','最终授权','发起申请','—'],
+           ['查看本店数据总览','✓','✓','✓（沙箱）'],
+           ['查看平台端汇总','—','—','—']].map(r=>
+        `<tr><td>${r[0]}</td>
+         <td style="color:${r[1]==='✓'?'#23A06B':'#1F2329'}">${r[1]}</td>
+         <td style="color:${r[2]==='✓'?'#23A06B':(r[2]==='—'?'#E5484D':'#E8891C')}">${r[2]}</td>
+         <td style="color:${r[3]==='—'?'#E5484D':'#E8891C'}">${r[3]}</td></tr>`).join('')}
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🧱</span>数据隔离（补充）</div></div>
+      <div class="list-item"><div class="fi"><div class="t">门店账号</div><div class="s">仅可见本门店数据</div></div>${T('强制','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">平台端账号</div><div class="s">可见全部门店汇总数据</div></div>${T('强制','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">未开通增值功能</div><div class="s">置灰并引导订阅，不可直接操作</div></div>${T('强制','ok')}</div>
+    </div>
+  </div>`
+});
+
+Pages['account/security'] = () => ({
+  title:'安全管理', tab:'mine', fr:'FR-6-3 安全管理',
+  desc:'密码修改与重置、登录安全日志、账号有效期管控、异常登录防护。',
+  tips:['修改/重置密码','查看登录安全日志','查看账号有效期与订阅联动'],
+  html:`
+  <div class="page-pad">
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🔑</span>密码</div></div>
+      <div class="list-item" onclick="UI.toast('已发送验证码，验证后可重置（演示）')"><div class="fi"><div class="t">修改密码</div><div class="s">登录状态下自助修改</div></div><span class="muted">›</span></div>
+      <div class="list-item" onclick="UI.toast('重置后旧登录态已失效（演示）')"><div class="fi"><div class="t">重置密码</div><div class="s">手机验证码验证后重置，旧登录态失效</div></div><span class="muted">›</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📜</span>登录安全日志</div><div class="card-more">导出</div></div>
+      ${DB.logs.map(l=>`<div class="list-item">
+        <div class="avatar" style="background:${l.r==='成功'?'#E8F7F0':'#FDECEC'};color:${l.r==='成功'?'#23A06B':'#E5484D'};font-size:11px">${l.r==='成功'?'✓':'!'}</div>
+        <div class="fi"><div class="t">${l.m} · ${l.r}</div><div class="s">${l.t} · ${l.d}</div></div></div>`).join('')}
+      <div class="hint muted" style="font-size:11px;margin-top:8px;line-height:1.7">记录登录时间、方式、设备/IP、成功与失败结果；管理员可查本店，平台可查全量（保留期待确认）。</div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⏳</span>账号有效期</div></div>
+      <div class="list-item"><div class="fi"><div class="t">周敏（管理员）</div><div class="s">长期有效</div></div>${T('生效中','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">李佳（运营）</div><div class="s">2026-12-31 到期 · 到期后无法登录但数据保留</div></div>${T('生效中','ok')}</div>
+      <div class="list-item"><div class="fi"><div class="t">订阅到期联动</div><div class="s">增值功能降级为不可用，数据不丢失</div></div>${T('已配置','ok')}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🛡️</span>增强防护（补充建议）</div></div>
+      ${['连续登录失败锁定','异常登录二次验证','敏感操作（扣款/外呼/自动投放）管理员验证'].map(x=>
+        `<div class="list-item"><div class="fi"><div class="t" style="font-size:13px">${x}</div></div>${T('建议开启','warn')}</div>`).join('')}
+    </div>
+  </div>`
+});
+
+Pages['account/subscription'] = () => ({
+  title:'订阅与账单', tab:'mine', fr:'商业模式 · 一次性购买 + 订阅增值',
+  desc:'基础版（一次性购买，15 项基础功能）+ 订阅增值包（10 项增值，可单卖或打包）。',
+  tips:['切换订阅状态','查看按 Agent 的增值渗透','查看账单记录'],
+  html:`
+  <div class="page-pad">
+    <div class="card" style="background:linear-gradient(135deg,#FFF9EF,#FFFDF8);border:1px solid #F0E4CC">
+      <div class="row between"><div><div style="font-size:15px;font-weight:700">${App.state.subscribed?'订阅版 · 五大 Agent 打包':'基础版 · 一次性购买'}</div>
+      <div class="muted" style="font-size:11.5px;margin-top:4px">${App.state.subscribed?'有效期至 2027-03-01 · ¥699/月':'含 15 项基础功能，永久可用'}</div></div>
+      <span style="font-size:20px">${App.state.subscribed?'👑':'🎁'}</span></div>
+      <button class="btn ${App.state.subscribed?'btn-outline':'btn-gold'} btn-block" style="margin-top:12px" onclick="App.toggleSubscribe(!App.state.subscribed)">
+        ${App.state.subscribed?'切换为基础版（演示）':'升级订阅版（演示）'}</button>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">📦</span>功能清单</div></div>
+      ${[['招聘','JD生成/人才库/文字筛选','音视频面试/背景核验'],['转让引流','素材生成/流量池/文字咨询','多渠道整合/流量分析'],['运营','方案生成/耗材管理/文案更新','推广优化/数据分析'],['客情','智能预约/文字回访/客情问答','语音回访/会员对接'],['短视频','内容生成/多平台发布/一键分发','评论回复/数据看板']].map(r=>
+        `<div class="list-item" style="align-items:flex-start">
+          <div class="avatar">${r[0][0]}</div>
+          <div class="fi"><div class="t">${r[0]} Agent</div>
+          <div class="s wrap" style="line-height:1.8;margin-top:4px">${T('基础','base')} ${r[1]}<br>${T('订阅','sub')} ${r[2]}</div></div>
+          ${T(App.state.subscribed?'已开通':'未订阅', App.state.subscribed?'ok':'')}</div>`).join('')}
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🧾</span>账单记录</div></div>
+      <div class="list-item"><div class="fi"><div class="t">订阅增值包 · 月付</div><div class="s">2026-11-01 · 微信支付</div></div><b>¥699</b></div>
+      <div class="list-item"><div class="fi"><div class="t">背景核验按次计费</div><div class="s">2026-10-28 · 3 次</div></div><b>¥43</b></div>
+      <div class="list-item"><div class="fi"><div class="t">基础版 · 一次性购买</div><div class="s">2026-06-01 · 微信支付</div></div><b>¥3,980</b></div>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px">定价、配额（生成次数/外呼条数/发布条数/核验次数）、单卖或打包策略为演示值，待业务方确认。</div>
+    </div>
+  </div>`
+});
+
+Pages['account/integration'] = () => ({
+  title:'渠道与集成', tab:'mine', fr:'FR-7-1 第三方集成要求',
+  desc:'人才库、流量渠道、短视频平台、会员系统、核验数据源、音视频服务、微信生态的授权与同步状态。',
+  tips:['查看各渠道授权有效期','重新授权过期渠道','查看异常记录'],
+  html:`
+  <div class="page-pad">
+    ${DB.integrations.filter(i=>!i.ok).length?`<div class="alert warn"><span class="a-ico">⚠</span><div>有 <b>${DB.integrations.filter(i=>!i.ok).length}</b> 项集成需处理，相关功能可能降级。</div></div>`:''}
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">🔌</span>集成状态</div></div>
+      ${DB.integrations.map(i=>`<div class="list-item" ${i.ok?'':`onclick="UI.toast('已跳转 ${i.n} 授权页（演示）')"`}>
+        <div class="avatar" style="background:${i.ok?'#E8F7F0':'#FDECEC'};color:${i.ok?'#23A06B':'#E5484D'};font-size:11px">${i.ok?'✓':'!'}</div>
+        <div class="fi"><div class="t">${i.n} ${T(i.c)}</div><div class="s">${i.st} · 有效期 ${i.exp} · 最近同步 ${i.sync}</div></div>
+        ${i.ok?'':`<button class="btn sm btn-primary">重新授权</button>`}</div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">⚙️</span>对接原则</div></div>
+      <div class="hint muted" style="font-size:11.5px;line-height:1.9">
+        · <b>标准化接口</b>、授权可控<br>
+        · 超时 / 重试 / 限流 / 幂等设计<br>
+        · 失败不阻断门店主流程，给出可读的降级提示<br>
+        · 数据按门店隔离<br>
+        · 平台规则变更由后台配置热更新，不改版本
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t"><span class="ico">❓</span>开放项（待确认）</div></div>
+      ${['首批必接平台清单与优先级','账号授权主体（门店自有账号 / 平台代运营账号）','API 调用成本承担方','各渠道配额与同步频率'].map(x=>
+        `<div class="list-item"><div class="fi"><div class="t" style="font-size:13px">${x}</div></div>${T('待确认','warn')}</div>`).join('')}
+    </div>
+  </div>`
+});
+
+/* ---------- 平台端宽屏看板 ---------- */
+Pages['platform'] = () => ({
+  title:'平台端看板', pc:true, fr:'FR-7-3 数据看板 · 平台端',
+  desc:'面向 SaaS 运营方：门店数、活跃度、功能使用分布、订阅转化、接口成功率与门店健康度。',
+  tips:['查看 12 周趋势','查看门店健康度预警','返回门店端小程序'],
+  html:`
+  <div class="pc-body">
+    ${DB.pc.kpi.map(k=>`<div class="pc-card c3"><div class="pc-kpi">${k.n}</div><div class="pc-lbl">${k.l} · <span class="up">${k.d}</span></div></div>`).join('')}
+
+    <div class="pc-card c8">
+      <div class="pc-ttl">周活跃门店趋势（近 12 周）${T('FR-7-3','fr')}</div>
+      <div class="line-chart">${DB.pc.trend.map((v,i)=>`<div class="lc" style="height:${v/1.3}%"><span>${i+1}周</span></div>`).join('')}</div>
+      <div style="height:18px"></div>
+    </div>
+
+    <div class="pc-card c4">
+      <div class="pc-ttl">五大 Agent 使用分布</div>
+      ${UI.bars(DB.pc.usage.map(u=>({n:u.n,v:u.v})), '%')}
+    </div>
+
+    <div class="pc-card c4">
+      <div class="pc-ttl">增值功能渗透率</div>
+      ${UI.bars([{n:'评论回复',v:72},{n:'短视频看板',v:64},{n:'会员对接',v:58},{n:'语音回访',v:41},{n:'流量分析',v:37},{n:'推广优化',v:33}],'%')}
+    </div>
+
+    <div class="pc-card c4">
+      <div class="pc-ttl">接口调用（24h）</div>
+      <div class="stat-grid" style="margin-bottom:10px">${UI.stat('99.2%','成功率','')}${UI.stat(128,'失败','')}${UI.stat('320ms','P95','')}</div>
+      ${UI.bars([{n:'短视频平台',v:4820},{n:'招聘渠道',v:2140},{n:'会员系统',v:1860},{n:'流量渠道',v:930}],' 次')}
+    </div>
+
+    <div class="pc-card c6">
+      <div class="pc-ttl">门店健康度与预警</div>
+      ${DB.pc.stores.map(s=>`<div class="health">
+        <span class="hdot" style="background:${s.s>=80?'#23A06B':(s.s>=60?'#E8891C':'#E5484D')}"></span>
+        <span style="flex:1">${s.n}</span>
+        <span class="prog" style="flex:0 0 90px"><i style="width:${s.s}%;background:${s.s>=80?'#23A06B':(s.s>=60?'#E8891C':'#E5484D')}"></i></span>
+        <span style="flex:0 0 40px;text-align:right;color:${s.s>=80?'#23A06B':(s.s>=60?'#E8891C':'#E5484D')};font-weight:600">${s.s}</span>
+        ${T(s.c, s.s>=80?'ok':(s.s>=60?'warn':'danger'))}</div>`).join('')}
+    </div>
+
+    <div class="pc-card c6">
+      <div class="pc-ttl">知识库未命中热点 / 合规拦截（周）</div>
+      ${UI.bars([{n:'资质类问题',v:38},{n:'价格类问题',v:26},{n:'禁忌类问题',v:21},{n:'售后政策',v:14}],' 次')}
+      <div class="alert warn" style="margin-top:12px"><span class="a-ico">⚠</span><div>本周合规拦截 <b>17</b> 次（极限词 9、功效宣称 5、肖像未授权 3），均已留痕并通知门店。</div></div>
+    </div>
+
+    <div class="pc-card c12">
+      <div class="pc-ttl">客户留存与续费</div>
+      <div class="stat-grid">${UI.stat('86%','月留存率','+2pt')}${UI.stat('74%','续费率','')}${UI.stat('¥4,860','客单价 LTV','+6%')}${UI.stat('68.4%','增值渗透率','+5.2pt')}</div>
+    </div>
+  </div>`
+});
+
+</script>
+<script>
+/* app.js */
+/* ===== 应用核心：状态 / 路由 / 交互 ===== */
+const App = {
+  state: {
+    role: 'admin',        // admin | operator | tester
+    subscribed: true,     // 订阅增值包开关（演示用）
+    route: 'login',
+    boardTab: 'overview',
+    logged: false,
+  },
+
+  /* ---------- 路由 ---------- */
+  go(route){
+    if(!this.state.logged && route !== 'login' && route !== 'platform'){ this.state.logged = true; }
+    if(route === 'login'){ this.state.logged = false; }
+    this.state.route = route;
+    this.render();
+    document.querySelector('.page-scroll').scrollTop = 0;
+  },
+
+  logout(){ this.state.logged = false; this.go('login'); UI.toast('已退出登录'); },
+
+  render(){
+    const page = Pages[this.state.route] ? Pages[this.state.route]() : Pages['home']();
+    const isPC = !!page.pc;
+    document.getElementById('stage-phone').classList.toggle('hidden', isPC);
+    document.getElementById('stage-pc').classList.toggle('hidden', !isPC);
+
+    /* 更新侧栏信息 */
+    document.getElementById('sidePageName').textContent = page.title || '';
+    document.getElementById('sidePageFr').textContent = page.fr || '';
+    document.getElementById('sidePageDesc').textContent = page.desc || '';
+    document.getElementById('sidePageTips').innerHTML = (page.tips || []).map(t=>`<li>${t}</li>`).join('');
+
+    if(isPC){
+      document.getElementById('pcBody').innerHTML = page.html;
+      return;
+    }
+
+    /* 导航栏 */
+    const nav = document.getElementById('navbar');
+    if(page.noNav){
+      nav.classList.add('transparent');
+      nav.innerHTML = '';
+    }else{
+      nav.classList.remove('transparent');
+      nav.innerHTML = `<div class="nb-back" onclick="App.back()">‹</div>
+        <div class="nb-title">${page.title || ''}</div>
+        <div class="nb-capsule"><i></i><i class="dot2"></i></div>`;
+    }
+
+    /* TabBar */
+    const tabs = [
+      ['home','🏠','工作台'], ['crm','💗','客情'], ['video','🎬','短视频'],
+      ['board','📊','数据'], ['mine','👤','我的']
+    ];
+    const tabbar = document.getElementById('tabbar');
+    tabbar.innerHTML = page.tab === null || page.tab === undefined
+      ? '' : tabs.map(t=>`<div class="tab ${page.tab===t[0]?'on':''}" onclick="App.go('${t[0]==='mine'?'account':t[0]}')">
+          <div class="ico">${t[1]}</div>${t[2]}${t[0]==='crm'?'<div class="badge">2</div>':''}</div>`).join('');
+    tabbar.style.display = (page.tab === null || page.tab === undefined) ? 'none' : 'flex';
+
+    /* 页面内容 */
+    document.getElementById('page').innerHTML = page.html;
+    document.getElementById('page').className = 'page-scroll ' + (page.tab ? '' : 'no-tab');
+  },
+
+  back(){
+    const r = this.state.route;
+    if(r === 'platform'){ this.go('home'); return; }
+    const parent = r.split('/').slice(0,-1).join('/');
+    this.go(parent || 'home');
+  },
+
+  /* ---------- 演示开关 ---------- */
+  toggleSubscribe(on){
+    this.state.subscribed = on;
+    document.getElementById('subToggle').checked = on;
+    document.getElementById('subHint').textContent = on ? '已订阅全部增值包' : '仅基础版（10 项增值已置灰）';
+    UI.toast(on ? '已切换为订阅版' : '已切换为基础版，增值功能已置灰');
+    this.render();
+  },
+
+  setRole(role){
+    this.state.role = role;
+    document.getElementById('roleSelect').value = role;
+    document.getElementById('roleHint').textContent = {admin:'门店管理员（最高权限）',operator:'运营（不可管账号/付费）',tester:'测试（沙箱租户）'}[role];
+    if(this.state.route !== 'login') UI.toast('已切换角色：' + {admin:'管理员',operator:'运营',tester:'测试'}[role]);
+    this.render();
+  },
+
+  subscribe(){
+    this.state.subscribed = true;
+    document.getElementById('subToggle').checked = true;
+    document.getElementById('subHint').textContent = '已订阅全部增值包';
+    UI.toast('订阅成功（演示）');
+    this.render();
+  },
+
+  /* ---------- 表单交互 ---------- */
+  chip(el, multi){
+    document.querySelectorAll('.chip.on').forEach(c=>{ if(multi || c.parentElement === el.parentElement) c.classList.remove('on'); });
+    if(multi){ el.classList.toggle('on'); } else { el.classList.add('on'); }
+  },
+
+  seg(el){
+    el.parentElement.querySelectorAll('div').forEach(d=>d.classList.remove('on'));
+    el.classList.add('on');
+  },
+
+  loginSeg(el, type){
+    this.seg(el);
+    document.getElementById('loginPhone').classList.toggle('hidden', type!=='phone');
+    document.getElementById('loginWechat').classList.toggle('hidden', type!=='wechat');
+  },
+
+  setBoardTab(tab){ this.state.boardTab = tab; this.render(); },
+
+  /* ---------- AI 生成动作 ---------- */
+  genJD(){
+    UI.gen('jdOut', ()=>`<div class="card"><div class="ai-out" style="margin:0">
+      <div class="ai-h"><span class="spark">✦</span>已生成 3 个版本（0.4s）· 五要素完整 · 合规校验通过</div>
+      <div class="ai-body"><span class="h">【专业版】美甲师（手绘方向）· 上海静安 · 6-10K</span>
+岗位职责：负责顾客美甲服务与款式设计，参与门店新款开发与展示陈列。任职要求：3 年以上美甲经验，熟练手绘彩绘、日式延长甲；有穿戴甲经验者优先。薪资待遇：6-10K（底薪+提成，上不封顶），包住宿、节日福利。门店亮点：静安寺商圈，8 工位，团队年轻氛围好。<span class="h">【亲和版】</span>找一位爱美甲也爱聊天的小伙伴～我们门店在静安寺商圈，希望你有 3 年以上经验、擅长手绘；薪资 6-10K 上不封顶，包住宿哦。<span class="h">【抖音风】</span>急急急！静安美甲店缺手绘大神！6-10K+提成一秒到账，包住！3 年以上经验的宝子直接私信！</div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-primary sm" style="flex:1" onclick="UI.toast('已保存为门店模板并进入发布流程')">保存并发布</button>
+        <button class="btn btn-outline sm" style="flex:1" onclick="UI.toast('已生成改写版本，已确认字段未受影响')">换一版</button>
+      </div></div></div>`);
+  },
+
+  genVideoNotes(){
+    UI.gen('videoOut', ()=>`<div class="ai-out">
+      <div class="ai-h"><span class="spark">✦</span>AI 面试纪要（面试结束 2 分 40 秒生成）</div>
+      <div class="ai-body"><span class="h">候选人：林小满 · 美甲师</span>
+技能自评：手绘彩绘 9/10，日式延长 8/10，穿戴甲 7/10（作品讲解：现场展示 3 幅作品图，左上手绘晕染完成度高）。
+到岗时间：可 1 周内到岗。期望薪资：6-8K（JD 区间内）。
+风险点：暂无纹绣经验，与皮肤管理岗位交叉需培训。
+<span class="h">推荐结论：A级 · 建议安排到店试手</span></div>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px">纪要已写入候选人档案；候选人已知悉并同意录制（授权留痕）。</div></div>`);
+  },
+
+  genVerify(){
+    UI.gen('verifyOut', ()=>`<div class="ai-out" style="border-color:#F6D8D9;background:linear-gradient(180deg,#FFFCFC,#FDF5F5)">
+      <div class="ai-h" style="color:var(--danger)">🛡️ 核验报告 · 周颖 · 2026-11-02 14:32</div>
+      <div class="ai-body"><span class="h">结论：2 项通过 · 1 项无法核验</span>
+✅ 身份实名核验：通过（公安二要素比对一致）
+✅ 从业资格证书：通过（美甲师高级证 · 编号可在发证机构查验）
+⚠️ 既往任职单位：无法核验（前一家门店已注销，无社保记录）
+<span class="h">风险提示</span>无法核验项不代表造假，建议要求候选人提供离职证明或工资流水佐证。
+授权凭证：授权书 #AUTH-2026-1102-087 · 时间戳 14:30 已留存。</div></div>`);
+  },
+
+  genMaterial(){
+    UI.gen('matOut', ()=> DB.materials.map(m=>`<div class="card">
+      <div class="row between" style="margin-bottom:8px"><div class="card-t" style="font-size:13px">✦ ${m.t}</div>${T(m.tag,'info')}</div>
+      <div class="ai-body" style="background:#FFFDFE;border:1px solid #F6E4E9;border-radius:10px;padding:11px">${m.body}</div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-primary sm" style="flex:1" onclick="App.go('flow/publish')">去发布</button>
+        <button class="btn btn-outline sm" style="flex:1" onclick="UI.toast('已保存到素材库')">保存</button>
+      </div></div>`).join('') + `<div class="hint muted" style="font-size:10.5px;text-align:center;padding-bottom:6px">✓ 违禁词校验通过 · 关键数据与录入一致（28万/128㎡/3年），无未提供的承诺</div>`, 1500);
+  },
+
+  fixPublish(name){
+    if(name.indexOf('美团')>-1){ UI.toast('已提示补充营业执照备案，补齐后可一键重发'); }
+    else{ UI.toast('已跳转授权页完成重新授权（演示）'); }
+  },
+
+  genPlan(){
+    UI.gen('planOut', ()=>`<div class="card"><div class="ai-out" style="margin:0">
+      <div class="ai-h"><span class="spark">✦</span>方案 A（推荐）·「水润焕新 · 老客回访季」</div>
+      <div class="ai-body"><span class="h">① 主题与目标人群</span>水光补水+深层清洁套餐；针对近 90 天到店但未消费水光项目的 186 位老客。
+<span class="h">② 活动机制</span>套餐价 ¥599（原价 ¥798，毛利底线校验通过）；老客专属，带新再减 ¥50。
+<span class="h">③ 排期（21 天）</span>D1-3 物料与话术准备 → D4-14 老客定向触达（文字回访联动）→ D15-21 复盘追单。
+<span class="h">④ 物料清单</span>海报×2、朋友圈素材×3、社群话术×1、到店立牌×1。
+<span class="h">⑤ 预算</span>物料 ¥1,800 + 平台推广 ¥5,000 + 礼品 ¥4,200 ≈ ¥11,000（预算内）。
+<span class="h">⑥ 话术示例</span>「姐，换季了皮肤最容易缺水，给您留了这次专属的水光体验价…」
+<span class="h">⑦ 风险预案</span>若 7 天转化 &lt;5%，自动切换素材 B 并调整人群定向。
+<span class="h">⚠️ 耗材校验</span>院线精华库存不足（6/12 盒），需先采购 12 盒，预计 ¥3,600。</div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-primary sm" style="flex:1" onclick="UI.toast('已下发运营，转入配套文案生成（联动 FR-3-3）')">下发执行</button>
+        <button class="btn btn-outline sm" style="flex:1" onclick="App.genCopy()">生成配套文案</button>
+      </div></div></div>
+      <div class="hint muted" style="font-size:10.5px;text-align:center">另有方案 B（拉新裂变向）与方案 C（升单提客单向），点击「换一批」查看</div>`, 1600);
+  },
+
+  genPurchase(){
+    UI.gen('purchaseOut', ()=>`<div class="ai-out">
+      <div class="ai-h"><span class="spark">✦</span>补货单（已按安全库存与历史 30 天耗速计算）</div>
+      <div class="ai-body">· 底胶/封层 ×10 瓶（补至安全线 15）\n· 院线精华 ×12 盒（水光活动方案预计消耗 14 盒，建议直接备足）\n· 纹绣色料（棕咖）×2 瓶 + 临期批次先进先出提醒</div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn btn-primary sm" style="flex:1" onclick="UI.toast('补货单已发送至供应商（演示）')">发送供应商</button>
+        <button class="btn btn-outline sm" style="flex:1" onclick="UI.toast('已导出补货单 Excel（演示）')">导出</button>
+      </div></div>`, 900);
+  },
+
+  genCopy(){
+    UI.gen('copyOut', ()=>`<div class="ai-out">
+      <div class="ai-h"><span class="spark">✦</span>多端文案已同步（4 个端口信息一致，硬字段未改动）</div>
+      <div class="ai-body"><span class="h">小程序项目页（diff 视图）</span>
+<span style="text-decoration:line-through;color:#B9BFC9">自然款嫁接 ¥298</span> → <b style="color:var(--danger)">自然款嫁接 ¥268</b>（新增）进口蚕丝蛋白毛 · 零负重 · 维持 30 天
+<span class="h">朋友圈话术</span>换季焕新价！睫毛嫁接 ¥268（原 ¥298），进口蚕丝蛋白毛，零负重到无感～评论区扣「睫毛」领老客专属再减 ¥30。
+<span class="h">社群通知</span>@所有人 本周老客专享：睫毛嫁接 ¥268，仅限本周，小窗预约。
+<span class="h">店内海报</span>主标「轻若无事 · 30 天有型」副标「换季节 ¥268」。</div>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px">违禁词校验通过；历史版本 v2 已归档，支持一键回滚。</div></div>`, 1400);
+  },
+
+  authorize(){
+    if(this.state.role !== 'admin'){ UI.deny('自动调整须管理员最终授权（演示）'); return; }
+    UI.toast('管理员验证通过，已执行自动调整');
+    setTimeout(()=>UI.toast('预算已向高转化组合倾斜 60%，计划 C 已暂停'), 900);
+    document.getElementById('promoOut').innerHTML = `<div class="alert info" style="margin-top:10px"><span class="a-ico">✓</span><div><b>调整已执行并留痕</b>：调整人 周敏（管理员）· 2026-11-02 15:02；预计 24h 后可查看前后效果对比。</div></div>`;
+  },
+
+  genSlots(){
+    UI.gen('slotOut', ()=>`<div class="card"><div class="card-h"><div class="card-t"><span class="ico">📆</span>林技师 · 未来 7 天可约</div><div class="card-more">自动排除碎片档</div></div>
+      ${['今天 11-02','周二 11-03','周三 11-04'].map((d,i)=>`<div style="margin-bottom:8px"><div class="muted" style="font-size:11px;margin-bottom:5px">${d}</div>
+      <div class="chips">${['10:00','14:00','16:30'][i]?'':''}${[i===0?['14:00 ✓','16:30 ✓']:i===1?['10:00 ✓','15:00 ✓','19:30 ✓']:['11:00 ✓','14:00 ✓']][0].map(s=>`<div class="chip" onclick="App.bookSlot()">${s.split(' ')[0]}</div>`).join('')}</div></div>`).join('')}
+      <div class="hint muted" style="font-size:10.5px;margin-top:6px">✓ 自动避开与 90min 项目时长不匹配的碎片档 · 含 15min 清洁周转 · 同技师同时段仅 1 单</div></div>`, 700);
+  },
+
+  bookSlot(){ UI.toast('预约成功！已发送确认与到店前提醒（演示）'); },
+
+  qaDetail(i){
+    const q = DB.qaList[i];
+    document.getElementById('qaOut').innerHTML = `<div class="card" style="border:1px solid #F6E4E9">
+      <div class="card-t" style="font-size:13px;margin-bottom:8px">❓ ${q.q}</div>
+      <div class="ai-out" style="margin:0"><div class="ai-h"><span class="spark">✦</span>${q.hit?'知识库命中':'未命中 · 转人工'}</div>
+      <div class="ai-body">${q.a}</div>
+      ${q.hit?'':'<div class="hint muted" style="font-size:10.5px;margin-top:8px">未命中问题 100% 进入「待补充」列表；重复提问答案稳定；低置信度回答附「以门店确认为准」。</div>'}</div>
+      ${q.hit?'<div class="btn-row" style="margin-top:10px"><button class="btn btn-outline sm" style="flex:1" onclick="UI.toast(\'已反馈：答案与门店设定不符（演示）\')">回答有误</button><button class="btn btn-primary sm" style="flex:1" onclick="UI.toast(\'已补充进知识库（演示）\')">有帮助</button></div>':''}
+    </div>`;
+    document.getElementById('qaOut').scrollIntoView({behavior:'smooth'});
+  },
+
+  genVoice(){
+    UI.gen('voiceOut', ()=>`<div class="alert info" style="margin-top:10px"><span class="a-ico">✓</span><div><b>外呼任务已创建（等待管理员二次确认）</b><br>数量 300 · 时段 10:00-12:00 / 15:00-20:00 · 预计接通率 68%<br>合规检查：✓ 顾客同意名单 300/300 · ✓ 静默时段外 · ✓ 可回拨可标勿扰</div></div>
+    <div class="ai-out"><div class="ai-h"><span class="spark">✦</span>通话示例（#017 · 黄女士）</div>
+<div class="ai-body">AI：您好，我是伊人美学静安店的顾问小伊，祝您生日快乐～本月也为您准备了一份专属礼遇……
+顾客：谢谢，最近忙，五一再说吧。
+<b>意图识别</b>：高意向-延后 → <b>已自动安排</b>五一前 3 天二次触达，要点已转文字进客情档案。</div></div>`, 1300);
+  },
+
+  genScript(){
+    UI.gen('scriptOut', ()=> DB.scripts.map((s,i)=>`<div class="card"><div class="row between" style="margin-bottom:8px">
+      <div class="card-t" style="font-size:13px">✦ 选题 ${i+1}：${s.t}</div>${s.safe?T('合规审查通过','ok'):T('合规审查通过','ok')}</div>
+      <div class="ai-body" style="background:#FFFDFE;border:1px solid #F6E4E9;border-radius:10px;padding:11px"><span class="h">钩子：${s.hook}</span>${s.body}</div>
+      <div class="btn-row" style="margin-top:10px"><button class="btn btn-primary sm" style="flex:1" onclick="App.go('video/publish')">进入发布</button><button class="btn btn-outline sm" style="flex:1" onclick="UI.toast('已保存为草稿（版本与编辑记录已留存）')">存草稿</button></div></div>`).join(''), 1500);
+  },
+
+  genDispatch(){
+    UI.gen('dispatchOut', ()=>`<div class="alert info" style="margin-top:10px"><span class="a-ico">✓</span><div><b>已下发 33 个账号</b>（8 家门店 + 25 位技师）<br>差异化改写示例（徐汇店）：「静安店」→「徐汇店」、地址同步替换、专属优惠码 HS-08；<b>地址/价格/时间硬信息未变</b>。</div></div>
+<div class="card-t" style="font-size:12.5px;margin:6px 0 6px">实时进度</div>
+<div class="prog gold"><i style="width:64%"></i></div>
+<div class="hint muted" style="font-size:10.5px;margin-top:6px">已发布 21 / 33 · 待处理 12 · 每条记录含账号、时间、状态、实际链接</div>`, 1400);
+  },
+
+  /* ---------- 详情弹窗 ---------- */
+  candDetail(id){
+    const c = DB.candidates.find(x=>x.id===id);
+    if(!c) return;
+    UI.sheet(c.name + ' · 候选人详情', `
+      <div class="row" style="gap:8px;margin-bottom:8px">
+        ${T(c.lv, c.status==='A'?'ok':(c.status==='B'?'warn':'danger'))}
+        ${T(c.src)}${T(c.exp+'经验')}${T('期望 '+c.pay)}${T(c.where)}${T(c.arrive+'到岗')}
+      </div>
+      <div class="ai-out" style="margin:0 0 10px"><div class="ai-h"><span class="spark">✦</span>AI 分层依据（可人工修正）</div>
+      <div class="ai-body">${c.reason}</div></div>
+      <div style="background:#F7F8FA;border-radius:12px;padding:10px 12px;margin-bottom:10px">
+        ${c.chat.map(m=>`<div class="msg ${m.m==='ai'?'me':'ai'}" style="margin-bottom:10px">
+          <div class="who"><div class="avatar round" style="${m.m==='ai'?'background:var(--brand);color:#fff':''}">${m.m==='ai'?'AI':'客'}</div></div>
+          <div class="bubble">${m.t}</div></div>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary sm" style="flex:1" onclick="UI.closeSheet();App.go('${App.state.subscribed?'hr/video':'hr/video'}')">${App.state.subscribed?'发起视频面试':'🔒 需订阅发起面试'}</button>
+        <button class="btn btn-outline sm" style="flex:1" onclick="UI.closeSheet();UI.toast('已转人工接管，AI 停止代聊（演示）')">转人工</button>
+        <button class="btn btn-outline sm" onclick="UI.toast('分层已修正，已记录为优化样本（演示）')">修正分层</button>
+      </div>`);
+  },
+
+  newMember(){
+    if(this.state.role !== 'admin'){ UI.deny('仅管理员可新建账号'); return; }
+    UI.sheet('新建成员账号', `
+      <div class="field"><label>姓名</label><input class="input" placeholder="如：王小美"></div>
+      <div class="field"><label>手机号（用于登录绑定）</label><input class="input" placeholder="用于首次登录绑定微信"></div>
+      <div class="field"><label>角色</label><select class="input"><option>运营</option><option>门店管理员</option><option>测试</option></select></div>
+      <div class="field"><label>所辖门店</label><select class="input"><option>伊人美学 · 静安店</option><option>伊人美学 · 徐汇店</option></select></div>
+      <div class="grid2"><div class="field"><label>生效日期</label><input class="input" value="2026-11-02"></div>
+      <div class="field"><label>有效期至</label><input class="input" value="2026-12-31"></div></div>
+      <button class="btn btn-primary btn-block" onclick="UI.closeSheet();UI.toast('账号已创建，成员可用微信登录（演示）')">创建账号</button>
+      <div class="hint muted" style="font-size:10.5px;margin-top:8px">运营不可查看订阅账单入口；高风险动作仍需管理员最终授权。</div>`);
+  },
+
+  /* ---------- 初始化 ---------- */
+  init(){
+    /* 状态栏时间 */
+    const now = new Date();
+    document.getElementById('sbTime').textContent = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+
+    /* 快捷跳转 */
+    const quick = [['工作台','home'],['招聘 Agent','hr'],['转让引流','flow'],['运营 Agent','ops'],['客情 Agent','crm'],['短视频 Agent','video'],['数据看板','board'],['成员管理','account/members'],['权限矩阵','account/perm'],['订阅账单','account/subscription'],['集成配置','account/integration'],['平台端看板','platform']];
+    document.getElementById('quickGrid').innerHTML = quick.map(q=>`<button onclick="App.go('${q[1]}')">${q[0]}</button>`).join('');
+
+    this.render();
+  }
+};
+
+/* 便捷引用（pages 中使用 T = UI.tag） */
+function T_(s){ return UI.tag(s); }
+
+document.addEventListener('DOMContentLoaded', ()=>App.init());
+
+</script>
+</body>
+</html>
